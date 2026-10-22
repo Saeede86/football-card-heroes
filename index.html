@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Football Card Heroes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lalezar&family=Vazirmatn:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app" dir="rtl" lang="fa">
+
+  <header class="top">
+    <div class="brand">
+      <p class="brand__eyebrow">FOOTBALL CARD HEROES</p>
+      <h1>قهرمانان کارت فوتبال</h1>
+    </div>
+    <div class="coins" aria-label="سکه‌های من">
+      <span class="coin" aria-hidden="true"></span>
+      <span id="coin-count">۰</span>
+      <span class="coins__label">سکه</span>
+    </div>
+  </header>
+
+  <nav class="menu" aria-label="منوی بازی">
+    <button class="tile tile--main" type="button" data-stage="2">
+      <span class="tile__icon" aria-hidden="true">🎁</span>
+      <span class="tile__title">باز کردن بسته</span>
+      <span class="tile__note">🔒 مرحله ۲ · به‌زودی</span>
+    </button>
+    <button class="tile" type="button" data-stage="3">
+      <span class="tile__icon" aria-hidden="true">📒</span>
+      <span class="tile__title">آلبوم من</span>
+      <span class="tile__note">🔒 مرحله ۳ · به‌زودی</span>
+    </button>
+    <button class="tile" type="button" data-stage="4">
+      <span class="tile__icon" aria-hidden="true">⚽</span>
+      <span class="tile__title">پنالتی</span>
+      <span class="tile__note">🔒 مرحله ۴ · به‌زودی</span>
+    </button>
+    <button class="tile" type="button" data-stage="5">
+      <span class="tile__icon" aria-hidden="true">👥</span>
+      <span class="tile__title">تیم من</span>
+      <span class="tile__note">🔒 مرحله ۵ · به‌زودی</span>
+    </button>
+  </nav>
+
+  <section class="collection" aria-labelledby="all-cards-title">
+    <div class="collection__head">
+      <div>
+        <h2 id="all-cards-title">همه کارت‌های بازی</h2>
+        <p class="collection__total" id="card-total"></p>
+      </div>
+      <div class="chips" role="group" aria-label="نوع کارت">
+        <button class="chip" type="button" data-filter="all" aria-pressed="true">همه <span class="chip__count"></span></button>
+        <button class="chip chip--legendary" type="button" data-filter="legendary" aria-pressed="false">افسانه‌ای <span class="chip__count"></span></button>
+        <button class="chip chip--rare" type="button" data-filter="rare" aria-pressed="false">کمیاب <span class="chip__count"></span></button>
+        <button class="chip chip--common" type="button" data-filter="common" aria-pressed="false">معمولی <span class="chip__count"></span></button>
+      </div>
+    </div>
+    <div class="grid" id="card-grid"></div>
+  </section>
+
+  <footer class="note">
+    توی این بازی هیچ پول واقعی وجود نداره. سکه‌ها فقط با بازی کردن به دست میان.
+  </footer>
+
+</div>
+
+<div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-label="نمایش کارت">
+  <div class="viewer__box" dir="rtl" lang="fa">
+    <div class="viewer__card" id="viewer-card"></div>
+    <p class="viewer__info" id="viewer-info"></p>
+    <button class="viewer__close" id="viewer-close" type="button">بستن</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" dir="rtl" hidden></div>
+
+<script src="cards.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
