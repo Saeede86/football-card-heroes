@@ -34,10 +34,10 @@
       <span class="tile__title">آلبوم من</span>
       <span class="tile__note">🔒 مرحله ۳ · به‌زودی</span>
     </button>
-    <button class="tile" type="button" data-stage="4">
+    <button class="tile" type="button" id="penalty-btn">
       <span class="tile__icon" aria-hidden="true">⚽</span>
       <span class="tile__title">پنالتی</span>
-      <span class="tile__note">🔒 مرحله ۴ · به‌زودی</span>
+      <span class="tile__note">هر گل ۲۰ سکه</span>
     </button>
     <button class="tile" type="button" data-stage="5">
       <span class="tile__icon" aria-hidden="true">👥</span>
@@ -95,6 +95,68 @@
   <div class="flash" id="flash"></div>
 </div>
 
+<div class="penalty" id="penalty" hidden role="dialog" aria-modal="true" aria-label="پنالتی">
+  <div class="penalty__stage" dir="rtl" lang="fa">
+    <div class="penalty__bar">
+      <button class="btn btn--ghost" id="pen-exit" type="button">خروج</button>
+      <div class="coins coins--small" aria-label="سکه‌های من">
+        <span class="coin" aria-hidden="true"></span>
+        <span id="pen-coins">۰</span>
+      </div>
+    </div>
+
+    <section class="penalty__view" id="pick-view">
+      <h2 class="penalty__title">کی پنالتی بزنه؟</h2>
+      <p class="penalty__hint">هرچی قدرت بازیکن بیشتر باشه، دروازه‌بان کمتر توپ رو می‌گیره.</p>
+      <div class="pick-grid" id="pick-grid"></div>
+    </section>
+
+    <section class="penalty__view" id="shoot-view" hidden>
+      <p class="shooter" id="shooter-info"></p>
+      <div class="shots" id="shots"></div>
+      <div class="field">
+        <div class="goal">
+          <div class="goal__net" id="net"></div>
+          <div class="keeper" id="keeper">
+            <svg viewBox="0 0 60 80" aria-hidden="true">
+              <rect x="22" y="56" width="7" height="22" rx="3" fill="#1b1b1b"/>
+              <rect x="31" y="56" width="7" height="22" rx="3" fill="#1b1b1b"/>
+              <rect x="19" y="48" width="22" height="13" rx="3" fill="#111111"/>
+              <path d="M21 31 L7 13 M39 31 L53 13" stroke="#ff7a1a" stroke-width="7" stroke-linecap="round"/>
+              <circle cx="6" cy="11" r="5.5" fill="#ffffff"/>
+              <circle cx="54" cy="11" r="5.5" fill="#ffffff"/>
+              <rect x="17" y="25" width="26" height="28" rx="7" fill="#ff7a1a"/>
+              <text x="30" y="45" text-anchor="middle" font-size="12" font-weight="800" font-family="Arial, sans-serif" fill="#111111">1</text>
+              <circle cx="30" cy="16" r="8.5" fill="#c68a63"/>
+              <path d="M21.5 15 Q22 6 30 6 Q38 6 38.5 15 Q35 10 30 10 Q25 10 21.5 15Z" fill="#1a1110"/>
+            </svg>
+          </div>
+          <div class="goal__zones" id="zones" dir="ltr">
+            <button type="button" data-col="0" data-row="0"></button>
+            <button type="button" data-col="1" data-row="0"></button>
+            <button type="button" data-col="2" data-row="0"></button>
+            <button type="button" data-col="0" data-row="1"></button>
+            <button type="button" data-col="1" data-row="1"></button>
+            <button type="button" data-col="2" data-row="1"></button>
+          </div>
+        </div>
+        <div class="spot"></div>
+        <div class="ball" id="ball"></div>
+        <p class="shout" id="shout" hidden></p>
+      </div>
+      <p class="penalty__hint" id="shoot-hint">روی یه جای دروازه بزن تا شوت کنی!</p>
+      <div class="round-end" id="round-end" hidden>
+        <p class="round-end__title" id="round-title"></p>
+        <p class="round-end__detail" id="round-detail"></p>
+        <div class="opening__actions">
+          <button class="btn btn--gold" id="pen-again" type="button">یه دور دیگه</button>
+          <button class="btn btn--ghost" id="pen-change" type="button">عوض کردن شوت‌زن</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
 <canvas class="fx" id="fx" aria-hidden="true"></canvas>
 
 <div class="toast" id="toast" role="status" dir="rtl" hidden></div>
@@ -102,5 +164,6 @@
 <script src="cards.js"></script>
 <script src="game.js"></script>
 <script src="pack.js"></script>
+<script src="penalty.js"></script>
 </body>
 </html>

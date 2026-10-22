@@ -83,7 +83,7 @@ function updatePackButtons() {
 async function openPack() {
   if (packBusy) return;
   if (save.coins < PACK_PRICE) {
-    showToast("سکه کافی نداری! توی مرحله ۴ با پنالتی سکه جمع می‌کنی.");
+    showToast("سکه کافی نداری! برو پنالتی بزن و سکه جمع کن.");
     return;
   }
   packBusy = true;
