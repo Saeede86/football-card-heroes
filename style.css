@@ -18,6 +18,7 @@
   --bronze-1: #f0b97c; --bronze-2: #b06a35; --bronze-3: #6e3a18; --bronze-ink: #2b1607;
   --silver-1: #f7f9fb; --silver-2: #b5bdc7; --silver-3: #6d7682; --silver-ink: #1d232b;
   --gold-1: #fff4b8;   --gold-2: #e8b737;   --gold-3: #8f600d;   --gold-ink: #2d1d02;
+  --icon-1: #d6b4ff;   --icon-2: #7b2ff2;   --icon-3: #26084f;   --icon-ink: #fff6dc;
 }
 
 [hidden] { display: none !important; }
@@ -157,6 +158,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .chip__count { color: var(--muted); font-size: 13px; }
 .chip[aria-pressed="true"] { background: var(--chalk); color: var(--pitch); border-color: var(--chalk); }
 .chip[aria-pressed="true"] .chip__count { color: inherit; opacity: 0.6; }
+.chip--icon[aria-pressed="true"] { background: var(--icon-2); border-color: var(--icon-2); color: var(--icon-ink); }
 .chip--legendary[aria-pressed="true"] { background: var(--gold-2); border-color: var(--gold-2); color: var(--gold-ink); }
 .chip--rare[aria-pressed="true"] { background: var(--silver-2); border-color: var(--silver-2); color: var(--silver-ink); }
 .chip--common[aria-pressed="true"] { background: var(--bronze-2); border-color: var(--bronze-2); color: var(--bronze-ink); }
@@ -229,6 +231,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .locked--common    { --tint: var(--bronze-2); }
 .locked--rare      { --tint: var(--silver-2); }
 .locked--legendary { --tint: var(--gold-2); }
+.locked--icon      { --tint: var(--icon-1); }
 .locked__inner {
   position: absolute;
   inset: 0;
@@ -295,6 +298,9 @@ button.card:hover { transform: translateY(-6px) rotate(-1.5deg); }
 .card--legendary { --m1: var(--gold-1);   --m2: var(--gold-2);   --m3: var(--gold-3);   --ink: var(--gold-ink);
   filter: drop-shadow(0 0 10px rgba(242, 193, 78, 0.5)) drop-shadow(0 10px 14px var(--shadow));
 }
+.card--icon      { --m1: var(--icon-1);   --m2: var(--icon-2);   --m3: var(--icon-3);   --ink: var(--icon-ink);
+  filter: drop-shadow(0 0 12px rgba(160, 100, 255, 0.65)) drop-shadow(0 10px 14px var(--shadow));
+}
 
 .card__inner {
   position: absolute;
@@ -316,7 +322,20 @@ button.card:hover { transform: translateY(-6px) rotate(-1.5deg); }
     radial-gradient(circle at 70% 18%, rgba(255, 255, 255, 0.6), transparent 45%),
     linear-gradient(160deg, var(--m1), var(--m2) 55%, var(--m3));
 }
-/* برق زدن کارت افسانه‌ای */
+/* کارت اسطوره: بنفش با ستاره‌های ریز طلایی */
+.card--icon .card__inner {
+  background:
+    radial-gradient(circle at 20% 30%, var(--gold-1) 0 0.6cqw, transparent 0.9cqw),
+    radial-gradient(circle at 80% 55%, var(--gold-1) 0 0.5cqw, transparent 0.8cqw),
+    radial-gradient(circle at 30% 75%, var(--gold-1) 0 0.4cqw, transparent 0.7cqw),
+    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0 2cqw, transparent 2cqw 5cqw),
+    radial-gradient(circle at 70% 18%, rgba(255, 255, 255, 0.35), transparent 45%),
+    linear-gradient(160deg, var(--m1), var(--m2) 45%, var(--m3));
+}
+.card--icon .card__power { color: var(--gold); }
+.card--icon .card__name { border-bottom-color: rgba(242, 193, 78, 0.6); }
+/* برق زدن کارت‌های افسانه‌ای و اسطوره */
+.card--icon .card__inner::after,
 .card--legendary .card__inner::after {
   content: "";
   position: absolute;
@@ -365,6 +384,8 @@ button.card:hover { transform: translateY(-6px) rotate(-1.5deg); }
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.card__name--long { font-size: 10cqw; line-height: 1.55; }
+.card__name--xlong { font-size: 8.2cqw; line-height: 1.9; }
 .card__meta {
   width: 100%;
   margin-top: 2.5cqw;

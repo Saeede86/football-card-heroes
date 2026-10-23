@@ -5,7 +5,7 @@ const PACK_PRICE = 250;
 const PACK_SIZE = 5;
 
 // شانس اومدن هر نوع کارت (از ۱۰۰). بقیه‌ش کارت معمولیه.
-const CHANCE = { legendary: 6, rare: 26 };
+const CHANCE = { icon: 2, legendary: 6, rare: 26 };
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sleep = (ms) => new Promise((done) => setTimeout(done, reduceMotion ? Math.min(ms, 150) : ms));
@@ -24,8 +24,9 @@ function drawPack() {
   for (let i = 0; i < PACK_SIZE; i++) {
     const roll = Math.random() * 100;
     const rarity =
-      roll < CHANCE.legendary ? "legendary" :
-      roll < CHANCE.legendary + CHANCE.rare ? "rare" : "common";
+      roll < CHANCE.icon ? "icon" :
+      roll < CHANCE.icon + CHANCE.legendary ? "legendary" :
+      roll < CHANCE.icon + CHANCE.legendary + CHANCE.rare ? "rare" : "common";
     pack.push(randomFrom(cardsOf(rarity)));
   }
   // هر بسته حداقل یه کارت کمیاب یا بهتر داره
@@ -36,8 +37,8 @@ function drawPack() {
 }
 
 // کارت ضعیف‌تر زودتر برمی‌گرده، کارت بهتر آخر از همه
-function rank(card) {
-  return (2 - RARITIES[card.rarity].order) * 100 + card.power;
+function flipOrder(card) {
+  return (3 - RARITIES[card.rarity].order) * 100 + card.power;
 }
 
 // ---------- صفحه باز کردن بسته ----------
@@ -127,10 +128,10 @@ async function openPack() {
   if (!skipFlips) await sleep(1000);
 
   // ۴. کارت‌ها یکی‌یکی برمی‌گردن
-  const order = slots.map((_, i) => i).sort((a, b) => rank(pulled[a].card) - rank(pulled[b].card));
+  const order = slots.map((_, i) => i).sort((a, b) => flipOrder(pulled[a].card) - flipOrder(pulled[b].card));
   let missedParty = null;
   for (const i of order) {
-    const isLegend = pulled[i].card.rarity === "legendary";
+    const isLegend = ["icon", "legendary"].includes(pulled[i].card.rarity);
     slots[i].classList.add("is-flipped");
     if (isLegend) slots[i].classList.add("is-legend");
     if (skipFlips) {
@@ -145,7 +146,9 @@ async function openPack() {
   // ۵. نتیجه
   slots.forEach((s) => (s.querySelector(".slot__badge").hidden = false));
   const newCount = pulled.filter((p) => p.isNew).length;
-  titleEl.textContent = pulled.some((p) => p.card.rarity === "legendary")
+  titleEl.textContent = pulled.some((p) => p.card.rarity === "icon")
+    ? "باورت می‌شه؟! کارت اسطوره گرفتی!"
+    : pulled.some((p) => p.card.rarity === "legendary")
     ? "وای! کارت افسانه‌ای گرفتی!"
     : newCount ? `${fa(newCount)} کارت جدید گرفتی!` : "این دفعه همه‌شون تکراری بودن!";
   skipBtn.hidden = true;

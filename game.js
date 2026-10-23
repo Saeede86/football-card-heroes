@@ -6,9 +6,10 @@ const START_COINS = 500;
 
 // sell = چند سکه می‌گیری اگه یه کارت تکراری از این نوع رو بفروشی
 const RARITIES = {
-  legendary: { label: "افسانه‌ای", order: 0, sell: 150 },
-  rare: { label: "کمیاب", order: 1, sell: 40 },
-  common: { label: "معمولی", order: 2, sell: 15 },
+  icon: { label: "اسطوره", order: 0, sell: 400 },
+  legendary: { label: "افسانه‌ای", order: 1, sell: 150 },
+  rare: { label: "کمیاب", order: 2, sell: 40 },
+  common: { label: "معمولی", order: 3, sell: 15 },
 };
 
 // ---------- ذخیره و بارگذاری (توی حافظه مرورگر) ----------
@@ -40,6 +41,15 @@ function fa(n) {
 let drawCount = 0;
 
 function hairSVG(look) {
+  const hair = hairShape(look);
+  // هدبند (نوار دور سر) روی هر مدل مویی می‌شینه
+  if (look.headband) {
+    hair.front = (hair.front || "") + `<path d="M32 34 Q50 25 68 34 L68 39 Q50 30 32 39Z" fill="${look.headband}"/>`;
+  }
+  return hair;
+}
+
+function hairShape(look) {
   const c = look.hair;
   switch (look.hairStyle) {
     case "short":
@@ -54,8 +64,7 @@ function hairSVG(look) {
     }
     case "long": {
       const back = `<path d="M28 44 Q26 15 50 14 Q74 15 72 44 L74 72 Q66 76 63 64 L63 44 L37 44 L37 64 Q34 76 26 72Z" fill="${c}"/>`;
-      let front = `<path d="M31 44 Q30 18 50 17 Q70 18 69 44 Q64 30 50 29 Q36 30 31 44Z" fill="${c}"/>`;
-      if (look.headband) front += `<path d="M32 34 Q50 25 68 34 L68 39 Q50 30 32 39Z" fill="${look.headband}"/>`;
+      const front = `<path d="M31 44 Q30 18 50 17 Q70 18 69 44 Q64 30 50 29 Q36 30 31 44Z" fill="${c}"/>`;
       return { back, front };
     }
     default:
@@ -102,6 +111,9 @@ function portraitSVG(look) {
 function cardHTML(card, tag = "button") {
   const rarity = RARITIES[card.rarity].label;
   const label = `${card.name}، کارت ${rarity}، قدرت ${fa(card.power)}`;
+  // اسم‌های بلند کوچیک‌تر نوشته می‌شن تا روی کارت جا بشن
+  const nameSize = card.name.length > 12 ? " card__name--xlong" : card.name.length > 8 ? " card__name--long" : "";
+  const mark = { icon: "✦ ", legendary: "★ " }[card.rarity] || "";
   const attrs = tag === "button" ? `type="button" aria-label="${label}"` : `role="img" aria-label="${label}"`;
   return `<${tag} class="card card--${card.rarity}" data-id="${card.id}" ${attrs}>
     <span class="card__inner">
@@ -110,10 +122,10 @@ function cardHTML(card, tag = "button") {
         <span class="card__pos">${card.position}</span>
       </span>
       <span class="card__face">${portraitSVG(card.look)}</span>
-      <span class="card__name">${card.name}</span>
+      <span class="card__name${nameSize}">${card.name}</span>
       <span class="card__meta">
         <span>${card.country}</span>
-        <span class="card__rarity">${card.rarity === "legendary" ? "★ " : ""}${rarity}</span>
+        <span class="card__rarity">${mark}${rarity}</span>
       </span>
     </span>
   </${tag}>`;
@@ -200,7 +212,8 @@ function renderViewerInfo() {
   const card = viewerCard;
   const count = save.collection[card.id] || 0;
   document.getElementById("viewer-info").textContent =
-    `${card.name} · ${card.position} · ${card.country} · کارت ${RARITIES[card.rarity].label} · ${fa(count)} تا داری`;
+    `${card.name} · ${card.position} · ${card.country} · کارت ${RARITIES[card.rarity].label} · ${fa(count)} تا داری` +
+    (card.rank ? ` · رتبه ${fa(card.rank)} در ۱۰۰ فوتبالیست برتر تاریخ` : "");
   sellEl.hidden = count < 2;
   sellBtn.hidden = false;
   sellConfirm.hidden = true;
