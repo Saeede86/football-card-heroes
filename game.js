@@ -104,6 +104,11 @@ function cardHTML(card, tag = "button") {
   return `<${tag} class="card card--${card.rarity}" data-id="${card.id}" ${attrs}>
     <span class="card__inner">
       ${binary}
+      <span class="card__glare" aria-hidden="true"></span>
+      <svg class="card__frame" viewBox="0 0 100 140" preserveAspectRatio="none" aria-hidden="true">
+        <polygon class="card__rim" points="14,0 86,0 100,9.8 100,124.6 50,140 0,124.6 0,9.8"/>
+        <polygon class="card__line" points="15.6,4.2 84.4,4.2 95.8,11.8 95.8,121.8 50,135.4 4.2,121.8 4.2,11.8"/>
+      </svg>
       <span class="card__top">
         <span class="card__power">${displayPower(card)}</span>
         <span class="card__pos">${card.position}</span>
@@ -366,5 +371,34 @@ document.querySelectorAll("[data-stage]").forEach((btn) => {
 });
 
 buildSparkles();
+// ---------- افکت سه‌بعدی کارت‌ها ----------
+// وقتی موس یا انگشت روی کارت حرکت می‌کنه، کارت کج می‌شه و نور روش جابه‌جا می‌شه
+function tiltCard(e) {
+  const card = e.target.closest(".card");
+  if (!card || card.closest(".flip")) return;
+  const r = card.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width;  // ۰ تا ۱
+  const y = (e.clientY - r.top) / r.height;
+  card.style.setProperty("--rx", `${(0.5 - y) * 18}deg`);
+  card.style.setProperty("--ry", `${(x - 0.5) * 22}deg`);
+  card.style.setProperty("--gx", `${x * 100}%`);
+  card.style.setProperty("--gy", `${y * 100}%`);
+  card.classList.add("is-tilting");
+}
+
+function untiltCard(e) {
+  const card = e.target.closest(".card");
+  if (!card || (e.relatedTarget && card.contains(e.relatedTarget))) return;
+  card.classList.remove("is-tilting");
+  card.style.removeProperty("--rx");
+  card.style.removeProperty("--ry");
+}
+
+if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  document.addEventListener("pointermove", tiltCard);
+  document.addEventListener("pointerout", untiltCard);
+  document.addEventListener("pointercancel", untiltCard);
+}
+
 renderCoins();
 renderGrid();

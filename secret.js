@@ -1,9 +1,11 @@
-// ====== کارت مخفی Secret ======
-// این کارت فقط با یه کد مخفی باز می‌شه.
+// ====== کدهای مخفی ======
+// کد اول: کارت مخفی Secret رو می‌ده.
+// کد دوم: همه کارت‌های آلبوم رو یه‌جا می‌ده.
 // راه باز کردن: ۵ بار پشت سر هم روی توپ ⚽ بالای صفحه بزن، بعد کد رو بنویس.
-// خود کد اینجا نوشته نشده (فقط یه عدد رمزی ازش هست) که کسی نتونه از روی کدها پیداش کنه.
+// خود کدها اینجا نوشته نشدن (فقط یه عدد رمزی ازشون هست) که کسی نتونه از روی کدها پیداشون کنه.
 
 const SECRET_CODE_HASH = 134533930;
+const ALL_CARDS_CODE_HASH = 95136864;
 const SECRET_TAPS = 5;
 
 const secretDialog = document.getElementById("secret-dialog");
@@ -37,6 +39,10 @@ document.querySelector(".brand__ball").addEventListener("click", () => {
 document.getElementById("secret-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const code = secretInput.value.trim().toUpperCase();
+  if (portraitHash(code) === ALL_CARDS_CODE_HASH) {
+    giveAllCards();
+    return;
+  }
   if (portraitHash(code) !== SECRET_CODE_HASH) {
     secretMsg.textContent = "این کد درست نیست!";
     secretInput.select();
@@ -54,6 +60,21 @@ document.getElementById("secret-form").addEventListener("submit", (e) => {
   celebrate(document.getElementById("viewer-card"));
   showToast("کارت Secret مال تو شد! 🔓");
 });
+
+// همه کارت‌های آلبوم رو می‌ده (کارت‌هایی که داری سر جاشون می‌مونن)
+function giveAllCards() {
+  const missing = ALBUM_CARDS.filter((c) => !owns(c));
+  if (!missing.length) {
+    secretMsg.textContent = "تو همه کارت‌ها رو داری! 😎";
+    return;
+  }
+  missing.forEach((c) => (save.collection[c.id] = 1));
+  writeSave();
+  renderGrid();
+  closeSecret();
+  celebrate(document.getElementById("album-title"));
+  showToast(`${fa(missing.length)} کارت جدید گرفتی! آلبومت کامل شد 🏆`);
+}
 
 document.getElementById("secret-close").addEventListener("click", closeSecret);
 secretDialog.addEventListener("click", (e) => {
