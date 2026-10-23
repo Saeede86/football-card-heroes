@@ -682,6 +682,7 @@ body.no-scroll { overflow: hidden; }
   gap: 18px;
 }
 .penalty__bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.penalty__bar .coins { margin-inline-start: auto; }
 .coins--small { font-size: 22px; padding: 6px 14px 6px 8px; }
 .coins--small .coin { width: 24px; height: 24px; }
 .penalty__view { display: flex; flex-direction: column; align-items: center; gap: 14px; }
@@ -705,10 +706,49 @@ body.no-scroll { overflow: hidden; }
 
 .shooter { margin: 0; text-align: center; }
 .shooter strong { font-family: var(--font-display); font-weight: 400; font-size: 22px; color: var(--gold); }
-.shots { display: flex; gap: 10px; direction: ltr; }
+/* جدول ضربات پنالتی */
+.shootout {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--turf);
+  border: 1px solid var(--turf-line);
+}
+.shootout__row { display: flex; align-items: center; gap: 12px; }
+.shootout__name {
+  flex: 0 0 auto;
+  width: 7.5em;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.shootout__goals {
+  margin-inline-start: auto;
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 1;
+  color: var(--gold);
+}
+.turn {
+  margin: 0;
+  padding: 6px 18px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 1.4;
+}
+.turn:empty { display: none; }
+.turn--shoot { background: var(--gold); color: var(--gold-ink); }
+.turn--save { background: #2fbf71; color: #062312; }
+.shots { display: flex; flex-wrap: wrap; gap: 6px; }
 .shot {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
+  font-size: 13px;
   border-radius: 50%;
   border: 2px solid var(--turf-line);
   display: grid;
@@ -734,6 +774,7 @@ body.no-scroll { overflow: hidden; }
     repeating-linear-gradient(90deg, #2f8a4a 0 12.5%, #287a40 12.5% 25%);
 }
 .goal {
+  z-index: 1;
   position: absolute;
   left: 14%;
   right: 14%;
@@ -763,6 +804,87 @@ body.no-scroll { overflow: hidden; }
   transform-origin: 50% 70%;
 }
 .keeper svg { display: block; width: 100%; height: auto; }
+/* دروازه‌بان حریف نارنجیه، دروازه‌بان تو سبز */
+.keeper__shirt { fill: var(--keeper-shirt, #ff7a1a); }
+.keeper__arms { stroke: var(--keeper-shirt, #ff7a1a); }
+.field.is-saving { --keeper-shirt: #2fbf71; }
+
+/* تماشاگرها پشت دروازه */
+.crowd {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 47%;
+  overflow: hidden;
+  background: linear-gradient(#0b1626, #16263a);
+}
+.crowd::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 35% 70% at 12% -10%, rgba(255, 252, 220, 0.35), transparent 70%),
+    radial-gradient(ellipse 35% 70% at 88% -10%, rgba(255, 252, 220, 0.35), transparent 70%),
+    linear-gradient(transparent 60%, rgba(0, 0, 0, 0.35));
+  pointer-events: none;
+}
+.fan {
+  position: absolute;
+  width: 2.6cqw;
+  height: 3.4cqw;
+  border-radius: 1.3cqw 1.3cqw 0.3cqw 0.3cqw;
+  background: var(--shirt);
+  opacity: 0.85;
+}
+.fan::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -1.7cqw;
+  width: 1.7cqw;
+  height: 1.7cqw;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: var(--skin);
+}
+.crowd.is-cheering .fan { animation: fan-jump 0.35s ease-in-out 4 alternate; animation-delay: var(--d); }
+@keyframes fan-jump {
+  to { transform: translateY(-1.6cqw); }
+}
+/* تابلوهای تبلیغاتی دور زمین */
+.boards {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 46%;
+  height: 6%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(90deg, #1f5fbf, #7b2ff2 50%, #e8423f);
+  border-block: 0.3cqw solid rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 2.6cqw;
+  white-space: nowrap;
+  direction: ltr;
+}
+.boards span { animation: boards 18s linear infinite; padding-inline-start: 2cqw; }
+@keyframes boards {
+  to { transform: translateX(-50%); }
+}
+/* چیزهایی که فقط برای دیدنن و نباید جلوی لمس دروازه رو بگیرن */
+.crowd, .boards, .kicker, .ball, .shout, .spot { pointer-events: none; }
+.kicker {
+  position: absolute;
+  left: 37%;
+  top: 80%;
+  width: 7.5%;
+  translate: -50% -100%;
+  z-index: 2;
+}
+.kicker svg { display: block; width: 100%; height: auto; }
 .goal__zones {
   position: absolute;
   inset: 0;
