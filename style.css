@@ -167,6 +167,106 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   gap: 24px 18px;
 }
 
+/* ---------- آلبوم ---------- */
+.album-progress {
+  flex: 1 1 260px;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.album-progress h2:focus { outline: none; }
+.album-progress h2:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; border-radius: 6px; }
+.progress {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--turf);
+  border: 1px solid var(--turf-line);
+  overflow: hidden;
+}
+.progress__fill {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--gold-3), var(--gold));
+  transition: width 0.5s ease;
+}
+
+.album-slot { position: relative; }
+.count-badge {
+  position: absolute;
+  top: -6px;
+  inset-inline-end: -6px;
+  z-index: 2;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: var(--chalk);
+  color: var(--pitch);
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1.7;
+  box-shadow: 0 4px 10px var(--shadow);
+  pointer-events: none;
+  direction: ltr;
+}
+
+.locked {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  position: relative;
+  container-type: inline-size;
+  filter: drop-shadow(0 10px 14px var(--shadow));
+}
+.locked:focus-visible { border-radius: 10px; outline-offset: 5px; }
+.locked--common    { --tint: var(--bronze-2); }
+.locked--rare      { --tint: var(--silver-2); }
+.locked--legendary { --tint: var(--gold-2); }
+.locked__inner {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(14% 0, 86% 0, 100% 7%, 100% 89%, 50% 100%, 0 89%, 0 7%);
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.06), transparent 60%),
+    linear-gradient(160deg, #0f1814, #040806);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 12cqw;
+}
+.locked__shadow { width: 74%; fill: #1b2620; }
+.locked__q {
+  position: absolute;
+  top: 27cqw;
+  font-family: var(--font-display);
+  font-size: 30cqw;
+  line-height: 1;
+  color: var(--muted);
+}
+.locked__rarity {
+  margin-top: 6cqw;
+  font-size: 7cqw;
+  font-weight: 800;
+  color: var(--tint);
+}
+
+.sell-all { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.sell { display: flex; flex-direction: column; align-items: center; }
+.sell__confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
 /* ---------- کارت فوتبالی ---------- */
 .card {
   appearance: none;

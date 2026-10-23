@@ -29,10 +29,10 @@
       <span class="tile__title">باز کردن بسته</span>
       <span class="tile__note">۲۵۰ سکه</span>
     </button>
-    <button class="tile" type="button" data-stage="3">
+    <button class="tile" type="button" id="album-btn">
       <span class="tile__icon" aria-hidden="true">📒</span>
       <span class="tile__title">آلبوم من</span>
-      <span class="tile__note">🔒 مرحله ۳ · به‌زودی</span>
+      <span class="tile__note" id="album-note"></span>
     </button>
     <button class="tile" type="button" id="penalty-btn">
       <span class="tile__icon" aria-hidden="true">⚽</span>
@@ -46,17 +46,26 @@
     </button>
   </nav>
 
-  <section class="collection" aria-labelledby="all-cards-title">
+  <section class="collection" id="album" aria-labelledby="album-title">
     <div class="collection__head">
-      <div>
-        <h2 id="all-cards-title">همه کارت‌های بازی</h2>
+      <div class="album-progress">
+        <h2 id="album-title" tabindex="-1">آلبوم من</h2>
         <p class="collection__total" id="card-total"></p>
+        <div class="progress" aria-hidden="true"><div class="progress__fill" id="progress-fill"></div></div>
       </div>
       <div class="chips" role="group" aria-label="نوع کارت">
         <button class="chip" type="button" data-filter="all" aria-pressed="true">همه <span class="chip__count"></span></button>
         <button class="chip chip--legendary" type="button" data-filter="legendary" aria-pressed="false">افسانه‌ای <span class="chip__count"></span></button>
         <button class="chip chip--rare" type="button" data-filter="rare" aria-pressed="false">کمیاب <span class="chip__count"></span></button>
         <button class="chip chip--common" type="button" data-filter="common" aria-pressed="false">معمولی <span class="chip__count"></span></button>
+      </div>
+    </div>
+    <div class="sell-all" id="sell-all" hidden>
+      <button class="btn btn--ghost" id="sell-all-btn" type="button"></button>
+      <div class="sell__confirm" id="sell-all-confirm" hidden>
+        <span>همه کارت‌های تکراری فروخته بشن؟ از هر کدوم یکی برات می‌مونه.</span>
+        <button class="btn btn--gold" id="sell-all-yes" type="button">بله، بفروش</button>
+        <button class="btn btn--ghost" id="sell-all-no" type="button">نه</button>
       </div>
     </div>
     <div class="grid" id="card-grid"></div>
@@ -72,6 +81,14 @@
   <div class="viewer__box" dir="rtl" lang="fa">
     <div class="viewer__card" id="viewer-card"></div>
     <p class="viewer__info" id="viewer-info"></p>
+    <div class="sell" id="sell" hidden>
+      <button class="btn btn--ghost" id="sell-btn" type="button"></button>
+      <div class="sell__confirm" id="sell-confirm" hidden>
+        <span>مطمئنی؟</span>
+        <button class="btn btn--gold" id="sell-yes" type="button">بله، بفروش</button>
+        <button class="btn btn--ghost" id="sell-no" type="button">نه</button>
+      </div>
+    </div>
     <button class="btn btn--gold" id="viewer-close" type="button">بستن</button>
   </div>
 </div>

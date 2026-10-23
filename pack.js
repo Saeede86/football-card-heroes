@@ -55,7 +55,7 @@ let packBusy = false;
 let skipFlips = false;
 
 function slotHTML({ card, isNew }, i) {
-  const badge = isNew ? "جدید!" : `تکراری ×${fa(save.collection[card.id])}`;
+  const badge = isNew ? "جدید!" : `تکراری · ${fa(save.collection[card.id])} تا`;
   return `<div class="slot" style="--i:${i}">
     <div class="flip">
       <div class="flip__face flip__back"><div class="card-back"><span class="card-back__ball">⚽</span><span class="card-back__mark">FCH</span></div></div>
@@ -98,6 +98,7 @@ async function openPack() {
   });
   writeSave();
   renderCoins();
+  renderGrid();
   updatePackButtons();
 
   // ۱. بسته می‌لرزه
