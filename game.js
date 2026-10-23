@@ -241,7 +241,49 @@ function renderCoins() {
   document.getElementById("coin-count").textContent = fa(save.coins);
 }
 
+// ---------- بنر بالای صفحه ----------
+// بهترین کارتت رو بزرگ نشون می‌ده
+function bestCard() {
+  return CARDS
+    .filter(owns)
+    .sort((a, b) => RARITIES[a.rarity].order - RARITIES[b.rarity].order || b.power - a.power)[0];
+}
+
+function renderHero() {
+  const best = bestCard();
+  const heroCard = document.getElementById("hero-card");
+  if (best) {
+    heroCard.className = `hero__card hero__card--${best.rarity}`;
+    heroCard.innerHTML = cardHTML(best, "div");
+    document.getElementById("hero-star").innerHTML =
+      `ستاره کلکسیون تو: <strong>${best.name}</strong> · قدرت ${fa(best.power)}`;
+  } else {
+    heroCard.className = "hero__card hero__card--empty";
+    heroCard.innerHTML = `<div class="hero__mystery"><div class="card-back"><span class="card-back__ball">⚽</span><span class="card-back__mark">FCH</span></div></div>`;
+    document.getElementById("hero-star").textContent = "اولین بسته‌ت رو باز کن و ستاره‌ت رو پیدا کن!";
+  }
+  document.getElementById("hero-cards").textContent = `${fa(CARDS.filter(owns).length)}/${fa(CARDS.length)}`;
+  document.getElementById("hero-wins").textContent = fa(Object.keys(save.beaten || {}).length);
+  // قدرت تیم توی team.js حساب می‌شه که بعد از این فایل بار می‌شه
+  if (typeof teamPower === "function") document.getElementById("hero-power").textContent = fa(teamPower());
+}
+
+// ---------- ذره‌های براق پس‌زمینه ----------
+function buildSparkles() {
+  let html = "";
+  for (let i = 0; i < 26; i++) {
+    const left = (Math.random() * 100).toFixed(1);
+    const size = (2 + Math.random() * 4).toFixed(1);
+    const time = (10 + Math.random() * 12).toFixed(1);
+    const delay = (-Math.random() * 20).toFixed(1);
+    const drift = Math.round(-40 + Math.random() * 80);
+    html += `<span style="left:${left}%;--size:${size}px;--time:${time}s;--delay:${delay}s;--drift:${drift}px"></span>`;
+  }
+  document.getElementById("sparkles").innerHTML = html;
+}
+
 function renderGrid() {
+  renderHero();
   const list = CARDS
     .filter((c) => filter === "all" || c.rarity === filter)
     .sort((a, b) => RARITIES[a.rarity].order - RARITIES[b.rarity].order || b.power - a.power);
@@ -412,5 +454,6 @@ document.querySelectorAll("[data-stage]").forEach((btn) => {
   });
 });
 
+buildSparkles();
 renderCoins();
 renderGrid();

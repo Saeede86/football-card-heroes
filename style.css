@@ -40,7 +40,50 @@ body {
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 
+/* ---------- پس‌زمینه متحرک: نور نورافکن‌ها و ذره‌های براق ---------- */
+.bg-fx {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.beam {
+  position: absolute;
+  top: -10vh;
+  width: 46vw;
+  height: 130vh;
+  background: linear-gradient(rgba(255, 250, 215, 0.16), rgba(255, 250, 215, 0.04) 55%, transparent 80%);
+  clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%);
+  transform-origin: 50% 0;
+  filter: blur(6px);
+}
+.beam--left { left: -8vw; animation: sweep 11s ease-in-out infinite alternate; }
+.beam--right { right: -8vw; animation: sweep 13s ease-in-out infinite alternate-reverse; }
+@keyframes sweep {
+  from { transform: rotate(-24deg); }
+  to { transform: rotate(14deg); }
+}
+.sparkles span {
+  position: absolute;
+  bottom: -20px;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--gold-1), rgba(242, 193, 78, 0));
+  opacity: 0;
+  animation: rise var(--time) linear var(--delay) infinite;
+}
+@keyframes rise {
+  0% { transform: translate(0, 0); opacity: 0; }
+  15% { opacity: 0.9; }
+  85% { opacity: 0.6; }
+  100% { transform: translate(var(--drift), -110vh); opacity: 0; }
+}
+
 .app {
+  position: relative;
+  z-index: 1;
   max-width: 1100px;
   margin-inline: auto;
   padding-block: 28px 48px;
@@ -66,13 +109,107 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   font-weight: 800;
   letter-spacing: 0.22em;
 }
-.brand h1 {
+/* ---------- بنر اصلی ---------- */
+.hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(130px, 26vw, 250px);
+  align-items: center;
+  gap: clamp(16px, 4vw, 48px);
+  padding: clamp(20px, 4vw, 44px);
+  border-radius: 26px;
+  border: 1px solid var(--turf-line);
+  background:
+    radial-gradient(ellipse 30% 40% at 8% 0%, rgba(255, 250, 215, 0.3), transparent 70%),
+    radial-gradient(ellipse 30% 40% at 92% 0%, rgba(255, 250, 215, 0.3), transparent 70%),
+    radial-gradient(ellipse 60% 22% at 50% 100%, transparent 58%, rgba(255, 255, 255, 0.35) 59% 60%, transparent 61%),
+    linear-gradient(#0c1a2e 0%, #15304a 58%, #2f8a4a 58%, #23703a 100%);
+  box-shadow: 0 24px 48px var(--shadow);
+}
+/* تماشاگرها: ردیف‌های سرهای کوچیک */
+.hero__crowd {
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  right: 0;
+  top: 30%;
+  height: 28%;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.16) 0 30%, transparent 33%) 0 0 / 18px 16px,
+    radial-gradient(circle at 50% 40%, rgba(242, 193, 78, 0.18) 0 30%, transparent 33%) 9px 8px / 18px 16px,
+    radial-gradient(circle at 50% 40%, rgba(232, 66, 63, 0.18) 0 30%, transparent 33%) 4px 4px / 27px 24px;
+  -webkit-mask-image: linear-gradient(transparent, #000 40%);
+  mask-image: linear-gradient(transparent, #000 40%);
+}
+.hero__text { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; min-width: 0; }
+.hero h1 {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(34px, 7vw, 58px);
+  font-size: clamp(32px, 6.5vw, 64px);
   line-height: 1.15;
   text-wrap: balance;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+}
+.hero__star { margin: 0; font-size: clamp(14px, 2.2vw, 18px); }
+.hero__star strong { color: var(--gold); font-family: var(--font-display); font-weight: 400; font-size: 1.25em; }
+.hero__stats { display: flex; flex-wrap: wrap; gap: 8px; }
+.hero__stat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.hero__stat b { font-family: var(--font-display); font-weight: 400; font-size: 20px; color: var(--chalk); }
+.hero__cta { font-size: 17px; padding: 12px 28px; box-shadow: 0 8px 22px rgba(242, 193, 78, 0.35); }
+
+/* کارت بزرگ بنر که توی هوا شناوره */
+.hero__card {
+  position: relative;
+  width: 100%;
+  animation: float 4.5s ease-in-out infinite;
+}
+.hero__card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 45%;
+  width: 230%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: repeating-conic-gradient(var(--ray, rgba(255, 214, 102, 0.4)) 0 7deg, transparent 7deg 20deg);
+  -webkit-mask-image: radial-gradient(circle, #000 12%, transparent 62%);
+  mask-image: radial-gradient(circle, #000 12%, transparent 62%);
+  animation: hero-rays 16s linear infinite;
+}
+.hero__card--icon { --ray: rgba(170, 110, 255, 0.45); }
+.hero__card--rare { --ray: rgba(220, 228, 238, 0.35); }
+.hero__card--common { --ray: rgba(240, 185, 124, 0.35); }
+.hero__card--empty { --ray: rgba(255, 255, 255, 0.18); }
+@keyframes hero-rays { to { rotate: 360deg; } }
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+.hero__mystery { position: relative; width: 100%; aspect-ratio: 5 / 7; }
+.hero__mystery .card-back__ball { font-size: clamp(30px, 8vw, 64px); }
+
+@media (max-width: 520px) {
+  .hero { grid-template-columns: minmax(0, 1fr) 118px; gap: 14px; }
+  .hero__stat { padding: 3px 9px; }
+  .hero__stat b { font-size: 17px; }
+  .hero__cta { padding: 10px 18px; font-size: 15px; white-space: nowrap; }
+  .hero__price { display: none; }
 }
 .coins {
   display: inline-flex;

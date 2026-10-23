@@ -78,11 +78,15 @@ function updatePackButtons() {
     ? `${fa(PACK_PRICE)} سکه`
     : `${fa(PACK_PRICE)} سکه · سکه کافی نداری`;
   againBtn.disabled = !enough;
+  document.getElementById("hero-pack").innerHTML = `🎁 باز کردن بسته<span class="hero__price"> · ${fa(PACK_PRICE)} سکه</span>`;
   againBtn.textContent = enough ? `یه بسته دیگه · ${fa(PACK_PRICE)} سکه` : "سکه کافی نداری";
 }
 
-async function openPack() {
+let lastPackButton = null;
+
+async function openPack(e) {
   if (packBusy) return;
+  if (e && e.currentTarget && e.currentTarget !== againBtn) lastPackButton = e.currentTarget;
   if (save.coins < PACK_PRICE) {
     showToast("سکه کافی نداری! برو پنالتی بزن و سکه جمع کن.");
     return;
@@ -163,10 +167,11 @@ function closeOpening() {
   if (packBusy) return;
   openingEl.hidden = true;
   document.body.classList.remove("no-scroll");
-  packTile.focus();
+  (lastPackButton || packTile).focus();
 }
 
 packTile.addEventListener("click", openPack);
+document.getElementById("hero-pack").addEventListener("click", openPack);
 againBtn.addEventListener("click", openPack);
 doneBtn.addEventListener("click", closeOpening);
 skipBtn.addEventListener("click", () => (skipFlips = true));

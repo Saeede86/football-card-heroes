@@ -9,19 +9,37 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="bg-fx" aria-hidden="true">
+  <span class="beam beam--left"></span>
+  <span class="beam beam--right"></span>
+  <div class="sparkles" id="sparkles"></div>
+</div>
+
 <div class="app" dir="rtl" lang="fa">
 
   <header class="top">
-    <div class="brand">
-      <p class="brand__eyebrow">FOOTBALL CARD HEROES</p>
-      <h1>قهرمانان کارت فوتبال</h1>
-    </div>
+    <p class="brand__eyebrow">⚽ FOOTBALL CARD HEROES</p>
     <div class="coins" aria-label="سکه‌های من">
       <span class="coin" aria-hidden="true"></span>
       <span id="coin-count">۰</span>
       <span class="coins__label">سکه</span>
     </div>
   </header>
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__crowd" aria-hidden="true"></div>
+    <div class="hero__text">
+      <h1 id="hero-title">قهرمانان کارت فوتبال</h1>
+      <p class="hero__star" id="hero-star"></p>
+      <div class="hero__stats">
+        <span class="hero__stat"><b id="hero-cards">۰</b>کارت</span>
+        <span class="hero__stat"><b id="hero-power">۰</b>قدرت تیم</span>
+        <span class="hero__stat"><b id="hero-wins">۰</b>تیم شکست‌خورده</span>
+      </div>
+      <button class="btn btn--gold hero__cta" id="hero-pack" type="button">🎁 باز کردن بسته</button>
+    </div>
+    <div class="hero__card" id="hero-card"></div>
+  </section>
 
   <nav class="menu" aria-label="منوی بازی">
     <button class="tile tile--main" type="button" id="open-pack-btn">

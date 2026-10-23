@@ -111,6 +111,7 @@ function renderTeam() {
   const power = teamPower();
   document.getElementById("team-power").textContent = fa(power);
   document.getElementById("team-note").textContent = `قدرت تیم ${fa(power)}`;
+  renderHero();
   teamNameInput.value = save.team.name;
   renderLadder();
 }
@@ -359,6 +360,7 @@ function closeTeam() {
   if (matchRunning) return;
   teamEl.hidden = true;
   document.body.classList.remove("no-scroll");
+  renderHero();
   teamTile.focus();
 }
 
@@ -371,3 +373,4 @@ document.addEventListener("keydown", (e) => {
 });
 
 document.getElementById("team-note").textContent = `قدرت تیم ${fa(teamPower())}`;
+renderHero();
