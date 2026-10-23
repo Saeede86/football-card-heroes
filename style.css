@@ -447,8 +447,46 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   filter: drop-shadow(0 10px 14px var(--shadow));
   transition: transform 0.2s ease;
   -webkit-tap-highlight-color: transparent;
+  touch-action: pan-y;
 }
 button.card:hover { transform: translateY(-6px) rotate(-1.5deg); }
+/* افکت سه‌بعدی: کارت به سمت موس یا انگشت کج می‌شه */
+.card.is-tilting,
+button.card.is-tilting:hover {
+  transform: perspective(600px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(1.04);
+  transition: transform 0.08s linear;
+  z-index: 3;
+}
+.card__glare {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.12) 25%, transparent 55%);
+  mix-blend-mode: overlay;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+.card.is-tilting .card__glare { opacity: 1; }
+
+/* قاب فلزی دور کارت */
+.card__frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  overflow: visible;
+  pointer-events: none;
+}
+.card__rim { fill: none; stroke: var(--rim); stroke-width: 6; }
+.card__line { fill: none; stroke: var(--rim-line); stroke-width: 0.7; }
+.card--common    { --rim: url(#rim-common);    --rim-line: rgba(255, 228, 196, 0.6); }
+.card--rare      { --rim: url(#rim-rare);      --rim-line: rgba(255, 255, 255, 0.85); }
+.card--legendary { --rim: url(#rim-legendary); --rim-line: rgba(255, 248, 210, 0.85); }
+.card--icon      { --rim: url(#rim-icon);      --rim-line: rgba(255, 228, 140, 0.75); }
+.card--secret    { --rim: url(#rim-secret);    --rim-line: rgba(57, 255, 136, 0.7); }
+.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 .card:focus-visible { border-radius: 10px; outline-offset: 5px; }
 
 .card--common    { --m1: var(--bronze-1); --m2: var(--bronze-2); --m3: var(--bronze-3); --ink: var(--bronze-ink); }
@@ -474,20 +512,35 @@ button.card:hover { transform: translateY(-6px) rotate(-1.5deg); }
   padding: 7cqw 8cqw 13cqw;
   overflow: hidden;
 }
-.card--legendary .card__inner {
+/* طرح مخصوص هر نوع کارت */
+/* برنزی: خط‌های موجی */
+.card--common .card__inner {
   background:
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0 2cqw, transparent 2cqw 5cqw),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='16'%3E%3Cpath d='M0 8 Q10 0 20 8 T40 8' fill='none' stroke='white' stroke-opacity='.2' stroke-width='1.4'/%3E%3C/svg%3E") 0 0 / 22cqw 9cqw,
+    radial-gradient(circle at 70% 18%, rgba(255, 255, 255, 0.5), transparent 45%),
+    linear-gradient(160deg, var(--m1), var(--m2) 55%, var(--m3));
+}
+/* نقره‌ای: شش‌ضلعی */
+.card--rare .card__inner {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='42'%3E%3Cpath d='M12 0l12 7v14l-12 7-12-7V7z M12 28v14 M0 35l12 7 M24 35l-12 7' fill='none' stroke='%23000' stroke-opacity='.1' stroke-width='1'/%3E%3C/svg%3E") 0 0 / 14cqw 24.5cqw,
     radial-gradient(circle at 70% 18%, rgba(255, 255, 255, 0.6), transparent 45%),
     linear-gradient(160deg, var(--m1), var(--m2) 55%, var(--m3));
 }
-/* کارت اسطوره: بنفش با ستاره‌های ریز طلایی */
+/* طلایی: پرتوهای نور از بالای کارت */
+.card--legendary .card__inner {
+  background:
+    repeating-conic-gradient(from 0deg at 50% 32%, rgba(255, 255, 255, 0.2) 0 5deg, transparent 5deg 13deg),
+    radial-gradient(circle at 50% 32%, rgba(255, 255, 255, 0.55), transparent 50%),
+    linear-gradient(160deg, var(--m1), var(--m2) 55%, var(--m3));
+}
+/* اسطوره: کهکشان با ستاره و ابرهای رنگی */
 .card--icon .card__inner {
   background:
-    radial-gradient(circle at 20% 30%, var(--gold-1) 0 0.6cqw, transparent 0.9cqw),
-    radial-gradient(circle at 80% 55%, var(--gold-1) 0 0.5cqw, transparent 0.8cqw),
-    radial-gradient(circle at 30% 75%, var(--gold-1) 0 0.4cqw, transparent 0.7cqw),
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0 2cqw, transparent 2cqw 5cqw),
-    radial-gradient(circle at 70% 18%, rgba(255, 255, 255, 0.35), transparent 45%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg fill='white'%3E%3Ccircle cx='7' cy='9' r='.8' opacity='.9'/%3E%3Ccircle cx='31' cy='4' r='.5' opacity='.6'/%3E%3Ccircle cx='52' cy='15' r='1' opacity='.8'/%3E%3Ccircle cx='18' cy='28' r='.5' opacity='.5'/%3E%3Ccircle cx='44' cy='34' r='.7' opacity='.7'/%3E%3Ccircle cx='9' cy='47' r='.6' opacity='.6'/%3E%3Ccircle cx='35' cy='53' r='.9' opacity='.9'/%3E%3Ccircle cx='56' cy='50' r='.4' opacity='.5'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 30cqw 30cqw,
+    radial-gradient(ellipse 60% 35% at 25% 30%, rgba(255, 120, 220, 0.35), transparent 70%),
+    radial-gradient(ellipse 55% 30% at 78% 62%, rgba(90, 170, 255, 0.35), transparent 70%),
+    radial-gradient(circle at 60% 20%, rgba(255, 255, 255, 0.3), transparent 40%),
     linear-gradient(160deg, var(--m1), var(--m2) 45%, var(--m3));
 }
 .card--icon .card__power { color: var(--gold); }
@@ -522,7 +575,7 @@ button.card:hover { transform: translateY(-6px) rotate(-1.5deg); }
   from { transform: translateY(0); }
   to { transform: translateY(-50%); }
 }
-.card--secret .card__inner > :not(.card__binary):not(.card__top) { position: relative; z-index: 1; }
+.card--secret :is(.card__face, .card__name, .card__stats, .card__meta) { position: relative; z-index: 1; }
 .card--secret .card__top { z-index: 1; }
 .card--secret .card__power { color: #39ff88; text-shadow: 0 0 2cqw rgba(57, 255, 136, 0.8); }
 .card--secret .card__rarity { color: #39ff88; }
