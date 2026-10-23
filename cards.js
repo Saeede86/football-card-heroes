@@ -251,4 +251,11 @@ const CARDS = [
     look: { skin: "#e0ac85", hair: "#2b1d14", hairStyle: "short", beard: true, shirt: "#c60b1e", trim: "#ffc400", number: 5 } },
   { id: "zlatan", name: "زلاتان", position: "مهاجم", power: 80, rarity: "common", country: "سوئد", rank: 100,
     look: { skin: "#e0ac85", hair: "#2b1d14", hairStyle: "long", beard: true, shirt: "#fecc00", trim: "#006aa7", number: 10 } },
+
+  // ---------- SECRET (کارت مخفی) ----------
+  // این کارت توی بسته‌ها نمیاد و توی آلبوم هم دیده نمی‌شه، مگه اینکه کد مخفی رو بلد باشی!
+  // قدرتش بی‌نهایته (∞) و توی همه پست‌ها می‌تونه بازی کنه.
+  { id: "secret", name: "Secret", position: "همه پست‌ها", power: 100, rarity: "secret", country: "ناشناخته",
+    secret: true, anyPosition: true,
+    look: { skin: "#d9a27a", hair: "#0a0f0c", hairStyle: "bald", masked: true, shirt: "#050806", trim: "#39ff88", numberColor: "#39ff88", number: "?" } },
 ];

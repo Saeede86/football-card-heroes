@@ -67,6 +67,11 @@ function allPlayers() {
   return Object.keys(LINES).flatMap(lineUp);
 }
 
+// این بازیکن می‌تونه توی این خط بازی کنه؟
+function fitsLine(card, line) {
+  return card.anyPosition || card.position === LINES[line];
+}
+
 function inTeam(id) {
   return allPlayers().some((c) => c && c.id === id);
 }
@@ -97,9 +102,9 @@ function tokenHTML(card, line, index) {
     </button>`;
   }
   const isCaptain = card.id === captainId();
-  return `<button class="token ${rarityTokenClass(card)}" type="button" data-line="${line}" data-index="${index}" aria-label="${card.name}، ${LINES[line]}، قدرت ${fa(card.power)}${isCaptain ? "، کاپیتان" : ""}">
+  return `<button class="token ${rarityTokenClass(card)}" type="button" data-line="${line}" data-index="${index}" aria-label="${card.name}، ${LINES[line]}، قدرت ${displayPower(card)}${isCaptain ? "، کاپیتان" : ""}">
     <span class="token__card">
-      <span class="token__power">${fa(card.power)}</span>
+      <span class="token__power">${displayPower(card)}</span>
       <span class="token__face">${portraitSVG(card.look, card.id)}</span>
       <span class="token__name">${card.name}</span>
     </span>
@@ -179,7 +184,7 @@ function openSheet(line, index) {
   sheetSlot = { line, index };
   const current = lineUp(line)[index];
   const options = CARDS
-    .filter((c) => c.position === LINES[line] && owns(c) && !inTeam(c.id))
+    .filter((c) => fitsLine(c, line) && owns(c) && !inTeam(c.id))
     .sort((a, b) => b.power - a.power);
   document.getElementById("sheet-title").textContent = current ? `${current.name}` : `انتخاب ${LINES[line]}`;
   // بخش کاپیتان برای بازیکنی که الان اینجاست
@@ -250,13 +255,16 @@ document.getElementById("formations").addEventListener("click", (e) => {
 });
 
 // بهترین بازیکن‌های هر پست رو خودکار می‌چینه
+// (از حمله شروع می‌کنه، پس بازیکنی که همه پست‌ها رو بلده اول مهاجم می‌شه)
 document.getElementById("auto-fill").addEventListener("click", () => {
-  Object.keys(LINES).forEach((line) => {
+  const used = new Set();
+  ["FWD", "MID", "DEF", "GK"].forEach((line) => {
     save.team.lines[line] = CARDS
-      .filter((c) => c.position === LINES[line] && owns(c))
+      .filter((c) => fitsLine(c, line) && owns(c) && !used.has(c.id))
       .sort((a, b) => b.power - a.power)
       .slice(0, FORMATIONS[save.team.formation][line])
       .map((c) => c.id);
+    save.team.lines[line].forEach((id) => used.add(id));
   });
   // اگه کاپیتان نداری، قوی‌ترین بازیکن کاپیتان می‌شه
   if (!captainId()) {

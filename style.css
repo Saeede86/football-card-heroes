@@ -492,7 +492,77 @@ button.card:hover { transform: translateY(-6px) rotate(-1.5deg); }
 }
 .card--icon .card__power { color: var(--gold); }
 .card--icon .card__name { border-bottom-color: rgba(242, 193, 78, 0.6); }
+/* کارت مخفی SECRET: مشکی با صفر و یک‌های سبز که بالا می‌رن */
+.card--secret {
+  --m1: #0f1f16; --m2: #050a07; --m3: #000000; --ink: #eafff2;
+  filter: drop-shadow(0 0 12px rgba(57, 255, 136, 0.6)) drop-shadow(0 10px 14px var(--shadow));
+}
+.card--secret .card__inner {
+  background:
+    radial-gradient(circle at 50% 30%, rgba(57, 255, 136, 0.18), transparent 60%),
+    linear-gradient(160deg, var(--m1), var(--m2) 55%, var(--m3));
+  box-shadow: inset 0 0 0 0.8cqw rgba(57, 255, 136, 0.55);
+}
+.card__binary {
+  position: absolute;
+  inset: 0 -2cqw;
+  z-index: 0;
+  font-family: "Courier New", monospace;
+  font-size: 5.4cqw;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  color: rgba(57, 255, 136, 0.32);
+  direction: ltr;
+  word-break: break-all;
+  white-space: normal;
+  animation: binary-rain 14s linear infinite;
+  pointer-events: none;
+}
+@keyframes binary-rain {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+.card--secret .card__inner > :not(.card__binary):not(.card__top) { position: relative; z-index: 1; }
+.card--secret .card__top { z-index: 1; }
+.card--secret .card__power { color: #39ff88; text-shadow: 0 0 2cqw rgba(57, 255, 136, 0.8); }
+.card--secret .card__rarity { color: #39ff88; }
+.card--secret .card__name { border-bottom-color: rgba(57, 255, 136, 0.5); letter-spacing: 0.08em; }
+.card--secret .card__stat b { color: #39ff88; }
+.token--secret { --m1: #0f1f16; --m2: #050a07; --m3: #000000; --ink: #eafff2; }
+.token--secret .token__power { color: #39ff88; }
+.hero__card--secret { --ray: rgba(57, 255, 136, 0.35); }
+
+/* پنجره کد مخفی */
+.secret-box {
+  width: min(360px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 20px;
+  border-radius: 18px;
+  background: #050a07;
+  border: 1px solid #39ff88;
+  box-shadow: 0 0 30px rgba(57, 255, 136, 0.3);
+  animation: pop 0.25s ease-out;
+}
+.secret-box input {
+  width: 100%;
+  font-family: "Courier New", monospace;
+  font-size: 22px;
+  letter-spacing: 0.15em;
+  text-align: center;
+  color: #39ff88;
+  background: #000000;
+  border: 1px solid rgba(57, 255, 136, 0.5);
+  border-radius: 10px;
+  padding: 10px;
+}
+.secret-box input:focus { outline: 2px solid #39ff88; outline-offset: 2px; }
+.secret-msg { margin: 0; min-height: 1.4em; color: #39ff88; font-weight: 700; }
+
 /* برق زدن کارت‌های افسانه‌ای و اسطوره */
+.card--secret .card__inner::after,
 .card--icon .card__inner::after,
 .card--legendary .card__inner::after {
   content: "";

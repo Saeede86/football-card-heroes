@@ -107,6 +107,20 @@ function hairArt(look, n, t) {
   }
 }
 
+// ---------- نقاب (برای کارت Secret) ----------
+function maskArt(n, facePath) {
+  return `
+    <path d="M28 46 Q25 14 50 12.5 Q75 14 72 46 L74 76 Q62 80 57.5 74 L57.5 60 Q50 66 42.5 60 L42.5 74 Q38 80 26 76Z" fill="#0b120e"/>
+    <path d="${facePath}" fill="#101a14"/>
+    <path d="M32 40 Q50 33 68 40 L68 50 Q50 45 32 50Z" fill="#000000" opacity=".55"/>
+    <path d="M36 44.5 L46 43.5 L44.5 47.5 L37.5 47.2Z" fill="#39ff88"/>
+    <path d="M64 44.5 L54 43.5 L55.5 47.5 L62.5 47.2Z" fill="#39ff88"/>
+    <ellipse cx="41" cy="45.5" rx="6" ry="3.4" fill="#39ff88" opacity=".25"/>
+    <ellipse cx="59" cy="45.5" rx="6" ry="3.4" fill="#39ff88" opacity=".25"/>
+    <text x="50" y="60" text-anchor="middle" font-size="4" font-family="monospace" fill="#39ff88" opacity=".5">101001</text>
+    <path d="M30 26 Q50 14 70 26" fill="none" stroke="#39ff88" stroke-opacity=".25" stroke-width=".8"/>`;
+}
+
 // ---------- کل چهره ----------
 function portraitSVG(look, id) {
   const n = drawCount++;
@@ -277,6 +291,7 @@ function portraitSVG(look, id) {
     ${eye(57.2, "R")}
     ${nose}
     ${mouth}
+    ${look.masked ? maskArt(n, facePath) : ""}
     ${look.headband ? `<path d="M32.5 34 Q50 25 67.5 34 L67.5 38.6 Q50 29.8 32.5 38.6Z" fill="${look.headband}"/><path d="M32.5 36.2 Q50 27.5 67.5 36.2" fill="none" stroke="#000000" stroke-opacity=".12" stroke-width=".6"/>` : ""}
   </svg>`;
 }
