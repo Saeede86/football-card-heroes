@@ -100,7 +100,7 @@ function tokenHTML(card, line, index) {
   return `<button class="token ${rarityTokenClass(card)}" type="button" data-line="${line}" data-index="${index}" aria-label="${card.name}، ${LINES[line]}، قدرت ${fa(card.power)}${isCaptain ? "، کاپیتان" : ""}">
     <span class="token__card">
       <span class="token__power">${fa(card.power)}</span>
-      <span class="token__face">${portraitSVG(card.look)}</span>
+      <span class="token__face">${portraitSVG(card.look, card.id)}</span>
       <span class="token__name">${card.name}</span>
     </span>
     ${isCaptain ? `<span class="token__captain" title="کاپیتان">C</span>` : ""}
