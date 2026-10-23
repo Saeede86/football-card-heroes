@@ -253,6 +253,23 @@
         <span class="scoreboard__team" id="sb-away"></span>
       </div>
       <p class="scoreboard__minute" id="sb-minute"></p>
+      <div class="mini-pitch" id="mini-pitch" dir="ltr" aria-hidden="true">
+        <svg class="mini-pitch__lines" viewBox="0 0 105 68" preserveAspectRatio="none">
+          <rect x="1" y="1" width="103" height="66"/>
+          <line x1="52.5" y1="1" x2="52.5" y2="67"/>
+          <circle cx="52.5" cy="34" r="9"/>
+          <rect x="1" y="14" width="16" height="40"/>
+          <rect x="88" y="14" width="16" height="40"/>
+          <rect x="1" y="25" width="5.5" height="18"/>
+          <rect x="98.5" y="25" width="5.5" height="18"/>
+        </svg>
+        <span class="mp-goal mp-goal--left" id="mp-goal-left"></span>
+        <span class="mp-goal mp-goal--right" id="mp-goal-right"></span>
+        <div id="mp-players"></div>
+        <span class="mp-ball" id="mp-ball"></span>
+        <span class="mp-name mp-name--left" id="mp-name-left"></span>
+        <span class="mp-name mp-name--right" id="mp-name-right"></span>
+      </div>
       <ol class="events" id="events"></ol>
       <div class="opening__actions">
         <button class="btn btn--ghost" id="match-skip" type="button">نشون دادن نتیجه</button>
@@ -272,6 +289,11 @@
 <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
   <div class="sheet__box" dir="rtl" lang="fa">
     <h2 class="penalty__title" id="sheet-title"></h2>
+    <div class="sheet__current" id="sheet-current" hidden>
+      <span id="sheet-current-name"></span>
+      <button class="btn btn--gold" id="sheet-captain" type="button"></button>
+    </div>
+    <p class="penalty__hint" id="sheet-hint"></p>
     <div class="pick-grid" id="sheet-grid"></div>
     <div class="opening__actions">
       <button class="btn btn--ghost" id="sheet-clear" type="button">خالی کردن این جا</button>

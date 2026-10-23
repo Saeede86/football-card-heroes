@@ -19,6 +19,9 @@ const FORMATIONS = {
 // جای خالی توی تیم این‌قدر قدرت حساب می‌شه
 const EMPTY_POWER = 50;
 
+// کاپیتان تیم این‌قدر قدرت اضافه می‌گیره
+const CAPTAIN_BONUS = 6;
+
 // تیم‌های کامپیوتر: قدرت و جایزه برد
 // مساوی یک‌چهارم جایزه رو می‌ده، باخت جایزه نداره
 const OPPONENTS = [
@@ -64,14 +67,21 @@ function allPlayers() {
   return Object.keys(LINES).flatMap(lineUp);
 }
 
-function teamPower() {
-  const players = allPlayers();
-  const total = players.reduce((sum, c) => sum + (c ? c.power : EMPTY_POWER), 0);
-  return Math.round(total / players.length);
-}
-
 function inTeam(id) {
   return allPlayers().some((c) => c && c.id === id);
+}
+
+// کاپیتان فقط وقتی حساب می‌شه که توی تیم باشه
+function captainId() {
+  return save.team.captain && inTeam(save.team.captain) ? save.team.captain : null;
+}
+
+function teamPower() {
+  const players = allPlayers();
+  const captain = captainId();
+  const total = players.reduce((sum, c) =>
+    sum + (c ? c.power + (c.id === captain ? CAPTAIN_BONUS : 0) : EMPTY_POWER), 0);
+  return Math.round(total / players.length);
 }
 
 // ---------- نشون دادن تیم ----------
@@ -79,18 +89,40 @@ function rarityTokenClass(card) {
   return card ? `token--${card.rarity}` : "token--empty";
 }
 
+// هر بازیکن روی زمین یه کارت کوچیکه
 function tokenHTML(card, line, index) {
   if (!card) {
     return `<button class="token token--empty" type="button" data-line="${line}" data-index="${index}" aria-label="انتخاب ${LINES[line]}">
-      <span class="token__face">+</span>
-      <span class="token__name">${LINES[line]}</span>
+      <span class="token__card"><span class="token__plus">+</span><span class="token__name">${LINES[line]}</span></span>
     </button>`;
   }
-  return `<button class="token ${rarityTokenClass(card)}" type="button" data-line="${line}" data-index="${index}" aria-label="${card.name}، ${LINES[line]}، قدرت ${fa(card.power)}">
-    <span class="token__face">${portraitSVG(card.look)}<span class="token__power">${fa(card.power)}</span></span>
-    <span class="token__name">${card.name}</span>
+  const isCaptain = card.id === captainId();
+  return `<button class="token ${rarityTokenClass(card)}" type="button" data-line="${line}" data-index="${index}" aria-label="${card.name}، ${LINES[line]}، قدرت ${fa(card.power)}${isCaptain ? "، کاپیتان" : ""}">
+    <span class="token__card">
+      <span class="token__power">${fa(card.power)}</span>
+      <span class="token__face">${portraitSVG(card.look)}</span>
+      <span class="token__name">${card.name}</span>
+    </span>
+    ${isCaptain ? `<span class="token__captain" title="کاپیتان">C</span>` : ""}
   </button>`;
 }
+
+// خط‌های زمین فوتبال (از بالا: دروازه حریف، پایین: دروازه خودت)
+const PITCH_LINES = `<svg class="pitch__lines" viewBox="0 0 68 80" preserveAspectRatio="none" aria-hidden="true">
+  <rect x="1" y="1" width="66" height="78"/>
+  <line x1="1" y1="40" x2="67" y2="40"/>
+  <circle cx="34" cy="40" r="7.3"/>
+  <circle cx="34" cy="40" r="0.5" class="dot"/>
+  <rect x="13.85" y="1" width="40.3" height="12"/>
+  <rect x="24.85" y="1" width="18.3" height="4"/>
+  <circle cx="34" cy="9" r="0.5" class="dot"/>
+  <path d="M28.5 13 A6.8 6.8 0 0 0 39.5 13"/>
+  <rect x="13.85" y="67" width="40.3" height="12"/>
+  <rect x="24.85" y="75" width="18.3" height="4"/>
+  <circle cx="34" cy="71" r="0.5" class="dot"/>
+  <path d="M28.5 67 A6.8 6.8 0 0 1 39.5 67"/>
+  <path d="M1 2.5 A1.5 1.5 0 0 0 2.5 1 M65.5 1 A1.5 1.5 0 0 0 67 2.5 M1 77.5 A1.5 1.5 0 0 1 2.5 79 M65.5 79 A1.5 1.5 0 0 1 67 77.5"/>
+</svg>`;
 
 function renderTeam() {
   // ترکیب‌ها
@@ -99,14 +131,16 @@ function renderTeam() {
   ).join("");
 
   // زمین: حمله بالا، دروازه‌بان پایین
-  pitchEl.innerHTML = ["FWD", "MID", "DEF", "GK"].map((line) =>
+  pitchEl.innerHTML = PITCH_LINES + ["FWD", "MID", "DEF", "GK"].map((line) =>
     `<div class="pitch__row">${lineUp(line).map((card, i) => tokenHTML(card, line, i)).join("")}</div>`
   ).join("");
 
   const empty = allPlayers().filter((c) => !c).length;
   document.getElementById("team-hint").textContent = empty
     ? `${fa(empty)} جای خالی داری. جای خالی فقط قدرت ${fa(EMPTY_POWER)} حساب می‌شه، پس پرشون کن!`
-    : "تیمت کامله! روی هر بازیکن بزن تا عوضش کنی.";
+    : captainId()
+    ? "تیمت کامله! روی هر بازیکن بزن تا عوضش کنی."
+    : "تیمت کامله! روی یه بازیکن بزن و کاپیتانش کن تا تیمت قوی‌تر بشه.";
 
   const power = teamPower();
   document.getElementById("team-power").textContent = fa(power);
@@ -147,10 +181,21 @@ function openSheet(line, index) {
   const options = CARDS
     .filter((c) => c.position === LINES[line] && owns(c) && !inTeam(c.id))
     .sort((a, b) => b.power - a.power);
-  document.getElementById("sheet-title").textContent = `انتخاب ${LINES[line]}`;
-  document.getElementById("sheet-grid").innerHTML = options.length
-    ? options.map((c) => cardHTML(c)).join("")
-    : `<p class="penalty__hint">${current ? "بازیکن دیگه‌ای" : "هنوز هیچ " + LINES[line] + "ی"} نداری! بسته باز کن تا ${LINES[line]} جدید پیدا کنی.</p>`;
+  document.getElementById("sheet-title").textContent = current ? `${current.name}` : `انتخاب ${LINES[line]}`;
+  // بخش کاپیتان برای بازیکنی که الان اینجاست
+  document.getElementById("sheet-current").hidden = !current;
+  if (current) {
+    const isCaptain = current.id === captainId();
+    document.getElementById("sheet-current-name").textContent =
+      isCaptain ? "این بازیکن کاپیتان تیمه!" : `کاپیتان قدرت ${fa(CAPTAIN_BONUS)} بیشتر می‌گیره.`;
+    const capBtn = document.getElementById("sheet-captain");
+    capBtn.textContent = isCaptain ? "✓ کاپیتانه" : "Ⓒ کاپیتانش کن";
+    capBtn.disabled = isCaptain;
+  }
+  document.getElementById("sheet-hint").textContent = options.length
+    ? (current ? `یا یه ${LINES[line]} دیگه جاش بذار:` : "")
+    : `${current ? "بازیکن دیگه‌ای" : "هنوز هیچ " + LINES[line] + "ی"} نداری! بسته باز کن تا ${LINES[line]} جدید پیدا کنی.`;
+  document.getElementById("sheet-grid").innerHTML = options.map((c) => cardHTML(c)).join("");
   document.getElementById("sheet-clear").hidden = !current;
   sheetEl.hidden = false;
   (sheetEl.querySelector(".card") || document.getElementById("sheet-close")).focus();
@@ -181,6 +226,15 @@ document.getElementById("sheet-grid").addEventListener("click", (e) => {
   if (card) setSlot(card.dataset.id);
 });
 document.getElementById("sheet-clear").addEventListener("click", () => setSlot(null));
+document.getElementById("sheet-captain").addEventListener("click", () => {
+  const current = lineUp(sheetSlot.line)[sheetSlot.index];
+  if (!current) return;
+  save.team.captain = current.id;
+  writeSave();
+  renderTeam();
+  closeSheet();
+  showToast(`${current.name} کاپیتان تیم شد!`);
+});
 document.getElementById("sheet-close").addEventListener("click", closeSheet);
 sheetEl.addEventListener("click", (e) => {
   if (e.target === sheetEl) closeSheet();
@@ -204,6 +258,11 @@ document.getElementById("auto-fill").addEventListener("click", () => {
       .slice(0, FORMATIONS[save.team.formation][line])
       .map((c) => c.id);
   });
+  // اگه کاپیتان نداری، قوی‌ترین بازیکن کاپیتان می‌شه
+  if (!captainId()) {
+    const best = allPlayers().filter(Boolean).sort((a, b) => b.power - a.power)[0];
+    if (best) save.team.captain = best.id;
+  }
   writeSave();
   renderTeam();
   showToast("بهترین بازیکن‌هات چیده شدن!");
@@ -248,6 +307,50 @@ function simulateMatch(myPower, oppPower) {
   return events.sort((a, b) => a.minute - b.minute);
 }
 
+// ---------- زمین کوچیک مسابقه ----------
+// تیم تو سمت راسته و به دروازه چپ حمله می‌کنه
+const mpBall = document.getElementById("mp-ball");
+let mpDots = [];
+
+function setupMiniPitch(opp) {
+  document.getElementById("mp-name-left").textContent = opp.name;
+  document.getElementById("mp-name-right").textContent = save.team.name;
+  const mineX = { GK: 95, DEF: 82, MID: 68, FWD: 57 };
+  const theirX = { GK: 5, DEF: 18, MID: 32, FWD: 43 };
+  const theirShape = { GK: 1, DEF: 4, MID: 4, FWD: 2 };
+  const dots = [];
+  const addLine = (count, x, side) => {
+    for (let k = 0; k < count; k++) dots.push({ x, y: ((k + 1) * 100) / (count + 1), side });
+  };
+  Object.keys(LINES).forEach((line) => {
+    addLine(FORMATIONS[save.team.formation][line], mineX[line], "mine");
+    addLine(theirShape[line], theirX[line], "them");
+  });
+  document.getElementById("mp-players").innerHTML = dots.map((d, k) =>
+    `<span class="mp-dot mp-dot--${d.side}" style="left:${d.x}%;top:${d.y}%;--d:${(k % 7) * 0.13}s"></span>`
+  ).join("");
+  mpDots = dots.map((d, k) => ({ ...d, el: document.getElementById("mp-players").children[k] }));
+  moveBall(50, 50);
+}
+
+// توپ می‌ره یه جای زمین و بازیکن‌ها یه کم دنبالش می‌رن
+function moveBall(x, y) {
+  mpBall.style.left = `${x}%`;
+  mpBall.style.top = `${y}%`;
+  const shift = (x - 50) * 0.3;
+  mpDots.forEach((d) => {
+    if (d.x < 8 || d.x > 92) return; // دروازه‌بان‌ها سر جاشون می‌مونن
+    d.el.style.left = `${Math.min(92, Math.max(8, d.x + shift))}%`;
+  });
+}
+
+function flashGoal(side) {
+  const goal = document.getElementById(side === "left" ? "mp-goal-left" : "mp-goal-right");
+  goal.classList.remove("is-goal");
+  void goal.offsetWidth;
+  goal.classList.add("is-goal");
+}
+
 async function playMatch(i) {
   if (matchRunning) return;
   matchRunning = true;
@@ -272,13 +375,26 @@ async function playMatch(i) {
   myEl.textContent = fa(0);
   oppEl.textContent = fa(0);
   document.getElementById("match-skip").focus();
+  setupMiniPitch(opp);
+  Sound.whistle();
 
   // دقیقه به دقیقه جلو می‌ره
   let next = 0;
   for (let minute = 1; minute <= 90; minute++) {
     minuteEl.textContent = `دقیقه ${fa(minute)}`;
+    // توپ هر چند دقیقه یه جای دیگه زمین می‌ره
+    if (!matchSkip && minute % 3 === 0) moveBall(15 + Math.random() * 70, 12 + Math.random() * 76);
     while (next < events.length && events[next].minute <= minute) {
       const ev = events[next++];
+      if (!matchSkip) {
+        // توپ اول نزدیک دروازه می‌ره، بعد می‌ره توش
+        moveBall(ev.mine ? 18 : 82, 30 + Math.random() * 40);
+        await sleep(450);
+        moveBall(ev.mine ? 1.5 : 98.5, 45 + Math.random() * 10);
+        await sleep(350);
+        flashGoal(ev.mine ? "left" : "right");
+        if (ev.mine) Sound.cheer(); else Sound.groan();
+      }
       if (ev.mine) my++; else them++;
       myEl.textContent = fa(my);
       oppEl.textContent = fa(them);
@@ -286,15 +402,24 @@ async function playMatch(i) {
         ? `⚽ گل! ${ev.scorer} برای ${save.team.name}`
         : `⚽ ${opp.name} گل زد`;
       listEl.insertAdjacentHTML("afterbegin", `<li class="event ${ev.mine ? "event--mine" : "event--them"}"><span class="event__min">${fa(ev.minute)}'</span> ${text}</li>`);
-      if (!matchSkip) await sleep(700);
+      if (!matchSkip) {
+        await sleep(700);
+        moveBall(50, 50);
+      }
     }
     if (minute === 45) {
       listEl.insertAdjacentHTML("afterbegin", `<li class="event">پایان نیمه اول ⏸️</li>`);
-      if (!matchSkip) await sleep(600);
+      if (!matchSkip) {
+        Sound.whistle();
+        moveBall(50, 50);
+        await sleep(600);
+      }
     }
     if (!matchSkip) await sleep(70);
   }
   minuteEl.textContent = "پایان بازی";
+  moveBall(50, 50);
+  Sound.whistle();
   listEl.insertAdjacentHTML("afterbegin", `<li class="event">سوت پایان! 🏁</li>`);
 
   // نتیجه و جایزه
@@ -307,6 +432,7 @@ async function playMatch(i) {
     save.beaten[i] = true;
     if (firstWin && i + 1 < OPPONENTS.length) title += ` تیم «${OPPONENTS[i + 1].name}» باز شد!`;
     celebrate(document.querySelector(".scoreboard"));
+    Sound.cheer();
   } else if (my === them) {
     earned = Math.round(opp.reward / 4);
     title = "مساوی شد!";
