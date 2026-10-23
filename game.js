@@ -78,41 +78,113 @@ function hairShape(look) {
 }
 
 function portraitSVG(look) {
-  const clipId = "shirt-" + drawCount++;
+  const n = drawCount++;
   const hair = hairSVG(look);
-  const shirtPath = "M12 100 Q14 80 36 76 L50 83 L64 76 Q86 80 88 100Z";
+  const shirtPath = "M10 100 Q12 80 34 75.5 L50 82 L66 75.5 Q88 80 90 100Z";
+  const facePath = "M33 44 Q33 25 50 25 Q67 25 67 44 Q67 58 59 64.5 Q50 69 41 64.5 Q33 58 33 44Z";
   const stripes = look.stripes
-    ? `<g clip-path="url(#${clipId})">${[22, 38, 54, 70].map((x) => `<rect x="${x}" y="70" width="8" height="30" fill="${look.trim}"/>`).join("")}</g>`
+    ? [22, 38, 54, 70].map((x) => `<rect x="${x}" y="70" width="8" height="30" fill="${look.trim}"/>`).join("")
     : "";
   const mouth = look.bigSmile
-    ? `<path d="M41 57 Q50 68 59 57Z" fill="#ffffff" stroke="#5a2414" stroke-width="1.5" stroke-linejoin="round"/>`
-    : `<path d="M44 58 Q50 63 56 58" fill="none" stroke="#5a2414" stroke-width="1.8" stroke-linecap="round"/>`;
+    ? `<path d="M41.5 57.5 Q50 68 58.5 57.5Z" fill="#ffffff" stroke="#6b2a1c" stroke-width="1.4" stroke-linejoin="round"/>`
+    : `<path d="M44.5 58.2 Q50 61.5 55.5 58.2 Q50 63.8 44.5 58.2Z" fill="#9b4332"/>`;
   const beard = look.beard
-    ? `<path d="M34 50 Q35 69 50 69 Q65 69 66 50 Q63 63 50 63 Q37 63 34 50Z" fill="${look.hair}" opacity=".8"/>`
+    ? `<path d="M34 50 Q35 69 50 69.5 Q65 69 66 50 Q63 63.5 50 63.5 Q37 63.5 34 50Z" fill="${look.hair}" opacity=".85"/>
+       <path d="M43.5 56.4 Q50 54 56.5 56.4 Q50 57.6 43.5 56.4Z" fill="${look.hair}" opacity=".9"/>`
     : "";
+  // برق مو (یا برق سر کچل)
+  const shine = look.hairStyle === "bald"
+    ? `<ellipse cx="44" cy="31" rx="5" ry="2.5" fill="#ffffff" opacity=".28"/>`
+    : `<path d="M39 25 Q48 19.5 58 23" fill="none" stroke="#ffffff" stroke-opacity=".28" stroke-width="2" stroke-linecap="round"/>`;
+  const eye = (x) => `<ellipse cx="${x}" cy="47" rx="3.1" ry="2.3" fill="#ffffff"/>
+    <circle cx="${x}" cy="47.2" r="1.8" fill="#2b1a10"/>
+    <circle cx="${x + 0.7}" cy="46.4" r="0.6" fill="#ffffff"/>`;
 
   return `<svg viewBox="0 0 100 100" aria-hidden="true">
-    <defs><clipPath id="${clipId}"><path d="${shirtPath}"/></clipPath></defs>
+    <defs>
+      <clipPath id="shirt-${n}"><path d="${shirtPath}"/></clipPath>
+      <clipPath id="face-${n}"><path d="${facePath}"/></clipPath>
+      <linearGradient id="cloth-${n}" x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0" stop-color="#000000" stop-opacity=".28"/>
+        <stop offset=".35" stop-color="#ffffff" stop-opacity=".12"/>
+        <stop offset=".65" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset="1" stop-color="#000000" stop-opacity=".3"/>
+      </linearGradient>
+      <radialGradient id="light-${n}" cx=".38" cy=".3" r=".75">
+        <stop offset="0" stop-color="#ffffff" stop-opacity=".28"/>
+        <stop offset=".55" stop-color="#ffffff" stop-opacity="0"/>
+        <stop offset="1" stop-color="#000000" stop-opacity=".18"/>
+      </radialGradient>
+    </defs>
     ${hair.back || ""}
-    <rect x="44" y="60" width="12" height="20" rx="3" fill="${look.skin}"/>
-    <path d="${shirtPath}" fill="${look.shirt}"/>
-    ${stripes}
-    <path d="M40 77 L50 86 L60 77" fill="none" stroke="${look.trim}" stroke-width="3" stroke-linejoin="round"/>
-    <text x="50" y="98" text-anchor="middle" font-size="12" font-weight="800" font-family="Arial, sans-serif" fill="${look.numberColor || look.trim}">${look.number}</text>
-    <circle cx="33" cy="48" r="4" fill="${look.skin}"/>
-    <circle cx="67" cy="48" r="4" fill="${look.skin}"/>
-    <ellipse cx="50" cy="46" rx="17" ry="20" fill="${look.skin}"/>
+    <rect x="43.5" y="58" width="13" height="22" rx="4" fill="${look.skin}"/>
+    <path d="M43.5 63 Q50 69 56.5 63 L56.5 68 Q50 72 43.5 68Z" fill="#000000" opacity=".18"/>
+    <g clip-path="url(#shirt-${n})">
+      <path d="${shirtPath}" fill="${look.shirt}"/>
+      ${stripes}
+      <path d="M10 100 Q12 80 34 75.5 L36 80 Q20 84 18 100Z" fill="${look.trim}" opacity=".5"/>
+      <path d="M90 100 Q88 80 66 75.5 L64 80 Q80 84 82 100Z" fill="${look.trim}" opacity=".5"/>
+      <rect x="0" y="70" width="100" height="30" fill="url(#cloth-${n})"/>
+    </g>
+    <path d="M39.5 76.5 L50 86.5 L60.5 76.5" fill="none" stroke="${look.trim}" stroke-width="3.2" stroke-linejoin="round"/>
+    <circle cx="64" cy="89" r="2.6" fill="${look.trim}" opacity=".9"/>
+    <text x="50" y="98" text-anchor="middle" font-size="11" font-weight="800" font-family="Arial, sans-serif" fill="${look.numberColor || look.trim}">${look.number}</text>
+    <ellipse cx="33.5" cy="48" rx="3.6" ry="4.6" fill="${look.skin}"/>
+    <ellipse cx="66.5" cy="48" rx="3.6" ry="4.6" fill="${look.skin}"/>
+    <ellipse cx="33.8" cy="48" rx="1.6" ry="2.4" fill="#000000" opacity=".15"/>
+    <ellipse cx="66.2" cy="48" rx="1.6" ry="2.4" fill="#000000" opacity=".15"/>
+    <path d="${facePath}" fill="${look.skin}"/>
+    <g clip-path="url(#face-${n})">
+      <rect x="30" y="22" width="40" height="50" fill="url(#light-${n})"/>
+    </g>
+    <ellipse cx="40" cy="54" rx="3.4" ry="2" fill="#e0695a" opacity=".16"/>
+    <ellipse cx="60" cy="54" rx="3.4" ry="2" fill="#e0695a" opacity=".16"/>
     ${hair.front || ""}
-    <path d="M39 41 Q43 39 47 41 M53 41 Q57 39 61 41" fill="none" stroke="${look.hair}" stroke-width="1.8" stroke-linecap="round"/>
-    <ellipse cx="43" cy="47" rx="2" ry="2.6" fill="#1d140e"/>
-    <ellipse cx="57" cy="47" rx="2" ry="2.6" fill="#1d140e"/>
-    <path d="M50 49 Q47.5 54.5 51 55" fill="none" stroke="#000000" stroke-opacity=".25" stroke-width="1.4" stroke-linecap="round"/>
+    ${shine}
+    <path d="M38.5 41.5 Q43 38.6 47.5 40.6 M52.5 40.6 Q57 38.6 61.5 41.5" fill="none" stroke="${look.hair}" stroke-width="2.3" stroke-linecap="round"/>
+    ${eye(43)}
+    ${eye(57)}
+    <path d="M50.5 48 Q47.4 54.2 50 55.3 Q51.8 55.8 53 54.8" fill="none" stroke="#000000" stroke-opacity=".22" stroke-width="1.3" stroke-linecap="round"/>
     ${beard}
     ${mouth}
   </svg>`;
 }
 
 // ---------- ساختن یک کارت ----------
+// ۶ تا آمار مثل FIFA. اگه کارتی خودش stats داشته باشه، همون استفاده می‌شه.
+// وگرنه از روی قدرت و پست بازیکن حساب می‌شه (هر بازیکن یه کم با بقیه فرق داره).
+const STAT_NAMES = {
+  field: ["سرعت", "شوت", "پاس", "دریبل", "دفاع", "بدن"],
+  keeper: ["شیرجه", "مهار", "ضربه", "واکنش", "سرعت", "جاگیری"],
+};
+const STAT_PROFILES = {
+  "مهاجم": [2, 4, -5, 2, -45, -8],
+  "هافبک": [-3, -4, 4, 2, -18, -8],
+  "مدافع": [-8, -35, -12, -16, 4, 2],
+  "دروازه‌بان": [1, 0, -8, 3, -40, 1],
+};
+
+function hashNumber(text) {
+  let h = 0;
+  for (const ch of text) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return h;
+}
+
+function cardStats(card) {
+  if (card.stats) return card.stats;
+  return STAT_PROFILES[card.position].map((offset, i) => {
+    const wiggle = (hashNumber(card.id + i) % 9) - 4;
+    return Math.max(30, Math.min(99, card.power + offset + wiggle));
+  });
+}
+
+function statsHTML(card) {
+  const names = card.position === "دروازه‌بان" ? STAT_NAMES.keeper : STAT_NAMES.field;
+  return cardStats(card).map((value, i) =>
+    `<span class="card__stat"><b>${fa(value)}</b>${names[i]}</span>`
+  ).join("");
+}
+
 function cardHTML(card, tag = "button") {
   const rarity = RARITIES[card.rarity].label;
   const label = `${card.name}، کارت ${rarity}، قدرت ${fa(card.power)}`;
@@ -125,9 +197,11 @@ function cardHTML(card, tag = "button") {
       <span class="card__top">
         <span class="card__power">${fa(card.power)}</span>
         <span class="card__pos">${card.position}</span>
+        ${flagSVG(card.country)}
       </span>
       <span class="card__face">${portraitSVG(card.look)}</span>
       <span class="card__name${nameSize}">${card.name}</span>
+      <span class="card__stats">${statsHTML(card)}</span>
       <span class="card__meta">
         <span>${card.country}</span>
         <span class="card__rarity">${mark}${rarity}</span>
