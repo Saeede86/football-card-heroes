@@ -22,6 +22,7 @@ function loadSave() {
         collection: data.collection || {},
         team: data.team || null,
         beaten: data.beaten || {},
+        penalty: data.penalty || null,
       };
     }
   } catch (e) {}

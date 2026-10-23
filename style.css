@@ -1032,8 +1032,111 @@ body.no-scroll { overflow: hidden; }
 @keyframes boards {
   to { transform: translateX(-50%); }
 }
+/* انتخاب نوع بازی و سختی */
+.pen-options {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 16px;
+  background: var(--turf);
+  border: 1px solid var(--turf-line);
+}
+.pen-option { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; }
+.pen-option__label { font-size: 14px; color: var(--muted); font-weight: 700; }
+.pen-cups { margin: 0; color: var(--gold); font-weight: 800; text-align: center; }
+.pen-cups:empty { display: none; }
+
+/* مسیر جام */
+.cup-path { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
+.cup-step {
+  padding: 3px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--turf-line);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.cup-step.is-done { color: var(--gold); border-color: var(--gold); }
+.cup-step.is-now { background: var(--gold); border-color: var(--gold); color: var(--gold-ink); }
+.cup-step--trophy { border-style: dashed; }
+.cup-arrow { color: var(--muted); }
+
+/* سایه و دنباله توپ */
+.ball-shadow {
+  position: absolute;
+  left: 50%;
+  top: 88.5%;
+  width: 6%;
+  aspect-ratio: 3 / 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.55), transparent);
+  opacity: 0.5;
+  z-index: 1;
+}
+.ball--ghost { opacity: 0; box-shadow: none; z-index: 2; }
+
+/* جایی که نشونه گرفتی */
+.goal__zones button.is-aimed::after {
+  opacity: 1;
+  border-style: solid;
+  background: rgba(242, 193, 78, 0.28);
+  animation: aim-pulse 0.7s ease-in-out infinite alternate;
+}
+@keyframes aim-pulse {
+  to { scale: 1.2; }
+}
+
+/* نوار قدرت شوت */
+.power {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.power__bar {
+  position: relative;
+  height: 22px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  background: linear-gradient(to left, #e8423f 0 30%, #2fbf71 30% 75%, var(--gold) 75% 90%, #e8423f 90% 100%);
+}
+.power__marker {
+  position: absolute;
+  top: -7px;
+  bottom: -7px;
+  inset-inline-start: 0;
+  width: 7px;
+  translate: 50% 0;
+  border-radius: 4px;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px var(--pitch), 0 0 10px rgba(255, 255, 255, 0.8);
+}
+.power__legend { display: flex; font-size: 12px; color: var(--muted); font-weight: 700; }
+.power__legend span { text-align: center; }
+.power__legend span:nth-child(1) { flex: 0 0 30%; }
+.power__legend span:nth-child(2) { flex: 0 0 45%; color: #2fbf71; }
+.power__legend span:nth-child(3) { flex: 0 0 15%; color: var(--gold); }
+.power__legend span:nth-child(4) { flex: 0 0 10%; }
+.power__btn { align-self: center; font-size: 20px; padding: 12px 44px; margin-top: 4px; }
+
+/* جام قهرمانی */
+.trophy { animation: pop 0.5s ease-out; }
+.trophy svg {
+  display: block;
+  width: 110px;
+  height: auto;
+  filter: drop-shadow(0 0 18px rgba(242, 193, 78, 0.6));
+  animation: float 3s ease-in-out infinite;
+}
+
 /* چیزهایی که فقط برای دیدنن و نباید جلوی لمس دروازه رو بگیرن */
-.crowd, .boards, .kicker, .ball, .shout, .spot { pointer-events: none; }
+.crowd, .boards, .kicker, .ball, .ball-shadow, .shout, .spot { pointer-events: none; }
 .kicker {
   position: absolute;
   left: 37%;

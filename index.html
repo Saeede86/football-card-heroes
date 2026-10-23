@@ -143,6 +143,25 @@
     </div>
 
     <section class="penalty__view" id="pick-view">
+      <div class="pen-options" id="pen-options">
+        <div class="pen-option">
+          <span class="pen-option__label">نوع بازی</span>
+          <div class="chips" role="group" aria-label="نوع بازی">
+            <button class="chip" type="button" data-pen-mode="friendly" aria-pressed="true">⚽ دوستانه</button>
+            <button class="chip" type="button" data-pen-mode="cup" aria-pressed="false">🏆 جام پنالتی</button>
+          </div>
+        </div>
+        <div class="pen-option">
+          <span class="pen-option__label">سختی</span>
+          <div class="chips" role="group" aria-label="سختی">
+            <button class="chip" type="button" data-pen-level="easy" aria-pressed="true">آسون</button>
+            <button class="chip" type="button" data-pen-level="medium" aria-pressed="false">متوسط</button>
+            <button class="chip" type="button" data-pen-level="hard" aria-pressed="false">سخت</button>
+          </div>
+        </div>
+        <p class="penalty__hint" id="level-info"></p>
+        <p class="pen-cups" id="cup-count"></p>
+      </div>
       <h2 class="penalty__title">کی پنالتی بزنه؟</h2>
       <p class="penalty__hint">هرچی قدرت بازیکن بیشتر باشه، دروازه‌بان کمتر توپ رو می‌گیره. وقتی حریف شوت می‌زنه، تو دروازه‌بانی!</p>
       <div class="pick-grid" id="pick-grid"></div>
@@ -150,6 +169,7 @@
 
     <section class="penalty__view" id="shoot-view" hidden>
       <p class="shooter" id="shooter-info"></p>
+      <div class="cup-path" id="cup-path" hidden></div>
       <div class="shootout">
         <div class="shootout__row">
           <span class="shootout__name">تو</span>
@@ -192,12 +212,40 @@
           </div>
         </div>
         <div class="spot"></div>
+        <div class="ball-shadow" id="ball-shadow"></div>
         <div class="kicker" id="kicker"></div>
+        <div class="ball ball--ghost"></div>
+        <div class="ball ball--ghost"></div>
+        <div class="ball ball--ghost"></div>
         <div class="ball" id="ball"></div>
         <p class="shout" id="shout" hidden></p>
       </div>
+      <div class="power" id="power" hidden>
+        <div class="power__bar" aria-hidden="true">
+          <span class="power__marker" id="power-marker"></span>
+        </div>
+        <div class="power__legend" aria-hidden="true"><span>ضعیف</span><span>خوب</span><span>عالی</span><span>زیادی!</span></div>
+        <button class="btn btn--gold power__btn" id="power-btn" type="button">⚽ شوت!</button>
+      </div>
       <p class="penalty__hint" id="shoot-hint"></p>
       <div class="round-end" id="round-end" hidden>
+        <div class="trophy" id="trophy" hidden>
+          <svg viewBox="0 0 80 96" aria-hidden="true">
+            <defs>
+              <linearGradient id="trophy-gold" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#fff4b8"/>
+                <stop offset=".5" stop-color="#e8b737"/>
+                <stop offset="1" stop-color="#8f600d"/>
+              </linearGradient>
+            </defs>
+            <path d="M14 10 H66 V30 Q66 54 40 60 Q14 54 14 30Z" fill="url(#trophy-gold)"/>
+            <path d="M14 16 H4 Q4 38 20 42 M66 16 H76 Q76 38 60 42" fill="none" stroke="url(#trophy-gold)" stroke-width="5"/>
+            <rect x="34" y="58" width="12" height="16" fill="url(#trophy-gold)"/>
+            <rect x="22" y="74" width="36" height="8" rx="2" fill="url(#trophy-gold)"/>
+            <rect x="16" y="82" width="48" height="10" rx="2" fill="#5a3b0a"/>
+            <path d="M40 20 l3 6 6.5 1 -4.7 4.6 1.1 6.5 -5.9-3.1 -5.9 3.1 1.1-6.5 -4.7-4.6 6.5-1Z" fill="#fff8d6"/>
+          </svg>
+        </div>
         <p class="round-end__title" id="round-title"></p>
         <p class="round-end__detail" id="round-detail"></p>
         <div class="opening__actions">
