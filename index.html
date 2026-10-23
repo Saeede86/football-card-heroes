@@ -39,10 +39,10 @@
       <span class="tile__title">پنالتی</span>
       <span class="tile__note">هر گل ۲۰ سکه</span>
     </button>
-    <button class="tile" type="button" data-stage="5">
+    <button class="tile" type="button" id="team-btn">
       <span class="tile__icon" aria-hidden="true">👥</span>
       <span class="tile__title">تیم من</span>
-      <span class="tile__note">🔒 مرحله ۵ · به‌زودی</span>
+      <span class="tile__note" id="team-note"></span>
     </button>
   </nav>
 
@@ -175,6 +175,77 @@
   </div>
 </div>
 
+<div class="team-screen" id="team" hidden role="dialog" aria-modal="true" aria-label="تیم من">
+  <div class="team-screen__stage" dir="rtl" lang="fa">
+    <div class="penalty__bar">
+      <button class="btn btn--ghost" id="team-exit" type="button">خروج</button>
+      <div class="coins coins--small" aria-label="سکه‌های من">
+        <span class="coin" aria-hidden="true"></span>
+        <span id="team-coins">۰</span>
+      </div>
+    </div>
+
+    <section class="team-view" id="team-view">
+      <div class="team-head">
+        <div class="team-head__name">
+          <label for="team-name">اسم تیم</label>
+          <input id="team-name" type="text" maxlength="24" autocomplete="off">
+        </div>
+        <div class="team-power" aria-live="polite">
+          <span class="team-power__label">قدرت تیم</span>
+          <span class="team-power__value" id="team-power">۰</span>
+        </div>
+      </div>
+
+      <div class="team-tools">
+        <div class="chips" role="group" aria-label="ترکیب تیم" id="formations"></div>
+        <button class="btn btn--ghost" id="auto-fill" type="button">بهترین تیم رو بچین</button>
+      </div>
+
+      <div class="pitch" id="pitch"></div>
+      <p class="penalty__hint" id="team-hint"></p>
+
+      <h2 class="penalty__title">مسابقه‌ها</h2>
+      <p class="penalty__hint">هر تیم رو ببری، تیم بعدی باز می‌شه. هرچی قدرت تیمت بیشتر باشه، شانس بردنت بیشتره.</p>
+      <ol class="ladder" id="ladder"></ol>
+    </section>
+
+    <section class="match-view" id="match-view" hidden>
+      <div class="scoreboard">
+        <span class="scoreboard__team" id="sb-home"></span>
+        <span class="scoreboard__score" id="sb-my">۰</span>
+        <span class="scoreboard__dash">-</span>
+        <span class="scoreboard__score" id="sb-opp">۰</span>
+        <span class="scoreboard__team" id="sb-away"></span>
+      </div>
+      <p class="scoreboard__minute" id="sb-minute"></p>
+      <ol class="events" id="events"></ol>
+      <div class="opening__actions">
+        <button class="btn btn--ghost" id="match-skip" type="button">نشون دادن نتیجه</button>
+      </div>
+      <div class="round-end" id="match-end" hidden>
+        <p class="round-end__title" id="match-title"></p>
+        <p class="round-end__detail" id="match-detail"></p>
+        <div class="opening__actions">
+          <button class="btn btn--gold" id="match-back" type="button">برگشت به تیم</button>
+          <button class="btn btn--ghost" id="match-again" type="button">مسابقه دوباره</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+  <div class="sheet__box" dir="rtl" lang="fa">
+    <h2 class="penalty__title" id="sheet-title"></h2>
+    <div class="pick-grid" id="sheet-grid"></div>
+    <div class="opening__actions">
+      <button class="btn btn--ghost" id="sheet-clear" type="button">خالی کردن این جا</button>
+      <button class="btn btn--gold" id="sheet-close" type="button">بستن</button>
+    </div>
+  </div>
+</div>
+
 <canvas class="fx" id="fx" aria-hidden="true"></canvas>
 
 <div class="toast" id="toast" role="status" dir="rtl" hidden></div>
@@ -183,5 +254,6 @@
 <script src="game.js"></script>
 <script src="pack.js"></script>
 <script src="penalty.js"></script>
+<script src="team.js"></script>
 </body>
 </html>

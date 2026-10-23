@@ -17,10 +17,15 @@ function loadSave() {
   try {
     const data = JSON.parse(localStorage.getItem(SAVE_KEY));
     if (data && typeof data.coins === "number") {
-      return { coins: data.coins, collection: data.collection || {} };
+      return {
+        coins: data.coins,
+        collection: data.collection || {},
+        team: data.team || null,
+        beaten: data.beaten || {},
+      };
     }
   } catch (e) {}
-  return { coins: START_COINS, collection: {} };
+  return { coins: START_COINS, collection: {}, team: null, beaten: {} };
 }
 
 function writeSave() {
